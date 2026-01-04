@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const clientId = params.get("id");
 
-const API_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+const API_URL = "https://script.google.com/macros/s/AKfycbxBDkUPDUUlPUClpWrxM1JAs9or08IwsfH_ELyIWvvLqsu4AW8zPTyiEYZeCv_vtC4q/exec";
 
 if (!clientId) {
   alert("Invalid client link");
