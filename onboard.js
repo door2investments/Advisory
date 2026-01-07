@@ -1,6 +1,7 @@
 // Supabase config
-const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_PUBLIC_ANON_KEY";
+// 2️⃣ Supabase config (PASTE YOUR VALUES)
+const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
@@ -26,7 +27,7 @@ form.addEventListener("submit", async (e) => {
   };
 
   const { data, error } = await supabaseClient
-    .from("clients")
+    .from("form_responses")
     .insert(payload)
     .select("access_token")
     .single();
