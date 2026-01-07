@@ -1,83 +1,79 @@
-// 1️⃣ Read client ID from URL
-const params = new URLSearchParams(window.location.search);
-const clientId = params.get("id");
+/************************************
+ * Client Dashboard – Token Based
+ ************************************/
 
-if (!clientId) {
-  alert("Invalid client link");
-  throw new Error("Client ID missing");
+// Read token from URL
+const params = new URLSearchParams(window.location.search);
+const accessToken = params.get("token");
+
+if (!accessToken) {
+  alert("Invalid or missing access link.");
+  throw new Error("Access token missing");
 }
 
 // 2️⃣ Supabase config (PASTE YOUR VALUES)
 const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
-// 3️⃣ Init Supabase
-
+// Init Supabase client
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
 
-// 4️⃣ Utility
+// Utility
 function formatCurrency(value) {
   if (value === null || value === undefined || isNaN(value)) return "₹ 0";
   return "₹ " + Math.round(value).toLocaleString("en-IN");
 }
 
-// 5️⃣ Fetch client data
+// Load client data
 async function loadClient() {
   const { data, error } = await supabaseClient
-    .from("form_responses")
+    .from("clients")
     .select("*")
-    .eq("mobile_number", clientId)
+    .eq("access_token", accessToken)
     .single();
 
   if (error || !data) {
     console.error(error);
-    alert("Client data not found.");
+    alert("Invalid or expired link.");
     return;
   }
 
+  // Update last accessed timestamp (non-blocking)
+  supabaseClient
+    .from("clients")
+    .update({ last_accessed_at: new Date().toISOString() })
+    .eq("id", data.id);
+
   renderClient(data);
-  document.getElementById("health").classList.add(
-  data.health_insurance ? "tag-yes" : "tag-no"
-);
-
-document.getElementById("term").classList.add(
-  data.term_insurance ? "tag-yes" : "tag-no"
-);
-
 }
 
-// 6️⃣ Render client dashboard
 function renderClient(data) {
-  /******** BASIC DETAILS ********/
-  document.getElementById("name").innerText =
-    data.full_name || "Client";
-
+  // Basic
+  document.getElementById("name").innerText = data.full_name || "Client";
   document.getElementById("basic").innerText =
-    `${data.marital_status || "—"} | Dependents: ${
-      data.dependents ?? 0
-    }`;
+    `${data.marital_status || "—"} | Dependents: ${data.dependents ?? 0}`;
 
-  /******** GOALS ********/
+  // Goals
   document.getElementById("shortGoal").innerText =
     formatCurrency(data.short_term_goal);
-
   document.getElementById("mediumGoal").innerText =
     formatCurrency(data.medium_term_goal);
-
   document.getElementById("longGoal").innerText =
     formatCurrency(data.long_term_goal);
 
-  /******** INSURANCE ********/
-  document.getElementById("health").innerText =
-    data.health_insurance ? "Yes" : "No";
+  // Insurance
+  const healthEl = document.getElementById("health");
+  healthEl.innerText = data.health_insurance ? "Yes" : "No";
+  healthEl.classList.add(data.health_insurance ? "tag-yes" : "tag-no");
 
-  document.getElementById("term").innerText =
-    data.term_insurance ? "Yes" : "No";
+  const termEl = document.getElementById("term");
+  termEl.innerText = data.term_insurance ? "Yes" : "No";
+  termEl.classList.add(data.term_insurance ? "tag-yes" : "tag-no");
 
-  /******** RETIREMENT ********/
+  // Retirement
   const inflation = 0.06;
   const retirementAge = 60;
 
@@ -88,7 +84,6 @@ function renderClient(data) {
   }
 
   const yearsToRetirement = Math.max(retirementAge - age, 0);
-
   const currentExpense = Number(data.monthly_expenses || 0);
 
   const futureMonthlyExpense =
@@ -98,53 +93,33 @@ function renderClient(data) {
 
   document.getElementById("currExpense").innerText =
     formatCurrency(currentExpense);
-
   document.getElementById("retExpense").innerText =
     formatCurrency(futureMonthlyExpense);
-
   document.getElementById("retCorpus").innerText =
     formatCurrency(retirementCorpus);
 
-  /******** ADVISOR OBSERVATIONS ********/
+  // Advisor notes
   const notes = [];
 
-  if (!data.health_insurance) {
-    notes.push(
-      "Health insurance coverage needs immediate attention to avoid unexpected medical expenses."
-    );
-  }
+  if (!data.health_insurance)
+    notes.push("Health insurance coverage needs immediate attention.");
 
-  if (!data.term_insurance) {
-    notes.push(
-      "Adequate term life insurance is important to secure your family’s financial future."
-    );
-  }
+  if (!data.term_insurance)
+    notes.push("Adequate term life insurance is recommended.");
 
-  if (yearsToRetirement <= 10) {
-    notes.push(
-      "Retirement is approaching. A conservative and disciplined investment approach is recommended."
-    );
-  } else {
-    notes.push(
-      "You have sufficient time to build a strong retirement corpus with disciplined investing."
-    );
-  }
-
-  if (currentExpense === 0) {
-    notes.push(
-      "Monthly expense details are missing, which may affect retirement planning accuracy."
-    );
-  }
+  if (yearsToRetirement <= 10)
+    notes.push("Retirement horizon is short. Conservative planning advised.");
+  else
+    notes.push("You have sufficient time to build retirement corpus with discipline.");
 
   const ul = document.getElementById("advisorNotes");
   ul.innerHTML = "";
-  notes.forEach((note) => {
+  notes.forEach(note => {
     const li = document.createElement("li");
     li.innerText = note;
     ul.appendChild(li);
   });
 }
 
-
-// 7️⃣ Load on page open
+// Init
 loadClient();
