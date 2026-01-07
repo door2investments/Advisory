@@ -106,6 +106,18 @@ button {
   font-size: 15px;
   font-weight: 600;
 }
+/* ===============================
+   CHECKBOXES – VERTICAL ONLY
+================================ */
+.checkbox-group {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.checkbox-group label {
+  white-space: nowrap;
+}
 
 /* MOBILE */
 @media (max-width: 768px) {
