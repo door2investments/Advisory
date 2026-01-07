@@ -58,12 +58,9 @@ body {
    DASHBOARD LAYOUT
 ================================ */
 .dashboard {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 24px auto;
   padding: 0 20px;
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
 }
 
 /* ===============================
