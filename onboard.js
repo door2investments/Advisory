@@ -38,6 +38,85 @@ form.addEventListener("submit", async (e) => {
     term_insurance: document.querySelector("input[name=term_insurance]:checked")?.value === "true",
     invested_before: document.querySelector("input[name=invested_before]:checked")?.value,
     investment_experience: document.querySelector("input[name=experience]:checked")?.value
+
+// ================================
+// INVESTMENT BEHAVIOUR & PROFILE
+// ================================
+
+decision_maker: document.querySelector(
+  "input[name='decision_maker']:checked"
+)?.value || null,
+
+investment_knowledge: document.querySelector(
+  "input[name='investment_knowledge']:checked"
+)?.value || null,
+
+market_fall_response: document.querySelector(
+  "input[name='market_fall_response']:checked"
+)?.value || null,
+
+sold_due_to_fear: document.querySelector(
+  "input[name='sold_due_to_fear']:checked"
+)?.value || null,
+
+tracking_frequency: document.querySelector(
+  "input[name='tracking_frequency']:checked"
+)?.value || null,
+
+investment_objective: document.querySelector(
+  "input[name='investment_objective']:checked"
+)?.value || null,
+
+investment_horizon: document.getElementById(
+  "investment_horizon"
+)?.value || null,
+
+loss_reaction: document.querySelector(
+  "input[name='loss_reaction']:checked"
+)?.value || null,
+
+// ================================
+// GOALS & AMOUNTS
+// ================================
+
+short_term_goal: document.getElementById(
+  "short_term_goals"
+)?.value?.trim() || null,
+
+medium_term_goal: document.getElementById(
+  "medium_term_goals"
+)?.value?.trim() || null,
+
+long_term_goal: document.getElementById(
+  "long_term_goals"
+)?.value?.trim() || null,
+
+investment_mode: document.querySelector(
+  "input[name='investment_mode']:checked"
+)?.value || null,
+
+advisor_expectation: document.querySelector(
+  "input[name='advisor_expectation']:checked"
+)?.value || null,
+
+short_term_amount: Number(
+  document.getElementById("short_term_amount")?.value || 0
+),
+
+medium_term_amount: Number(
+  document.getElementById("medium_term_amount")?.value || 0
+),
+
+long_term_amount: Number(
+  document.getElementById("long_term_amount")?.value || 0
+),
+
+retirement_planned: document.querySelector(
+  "input[name='retirement_planned']:checked"
+)?.value || null
+
+
+    
   };
 
   const { error } = await supabaseClient.from("form_responses").insert(payload);
