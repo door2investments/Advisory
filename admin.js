@@ -7,7 +7,7 @@ const supabaseClient = window.supabase.createClient(
 );
 
 const tableBody = document.getElementById("clientsBody");
-const baseUrl = `${location.origin}/client.html?token=`;
+const baseUrl = `${location.origin}/Advisory/client.html?token=`;
 
 async function loadClients() {
   const { data, error } = await supabaseClient
