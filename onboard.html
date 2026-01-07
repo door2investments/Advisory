@@ -5,24 +5,17 @@
   <title>Client Onboarding | Wealth & Investment Advisory</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
   <link rel="stylesheet" href="onboard.css" />
 </head>
 <body>
 
-<!-- ===============================
-     BRAND HEADER (SAME AS CLIENT)
-================================ -->
 <header class="brand-header">
   <div class="brand-container brand-row">
     <div class="brand-left">
       <h1>Wealth & Investment Advisory</h1>
       <p class="brand-sub">Independent Financial Advisory Services</p>
     </div>
-
     <div class="brand-contact">
       <span>📞 9390250541</span>
       <span>✉️ door2investments@gmail.com</span>
@@ -30,19 +23,14 @@
   </div>
 </header>
 
-<!-- ===============================
-     ONBOARDING FORM
-================================ -->
 <main class="page-wrapper">
   <div class="form-card">
     <h2>Client Onboarding</h2>
-    <p class="form-sub">
-      Please provide the following details to create your personalised
-      financial snapshot.
-    </p>
+    <p class="form-sub">Please share the details below to create your personalised financial profile.</p>
 
-    <form id="clientForm">
+    <form id="clientForm" class="form-grid">
 
+      <!-- BASIC DETAILS -->
       <div class="field">
         <label>Full Name</label>
         <input type="text" id="full_name" required />
@@ -59,40 +47,114 @@
       </div>
 
       <div class="field">
+        <label>Date of Birth</label>
+        <input type="date" id="date_of_birth" />
+      </div>
+
+      <div class="field">
+        <label>Gender</label>
+        <div class="options">
+          <label><input type="radio" name="gender" value="Male" /> Male</label>
+          <label><input type="radio" name="gender" value="Female" /> Female</label>
+        </div>
+      </div>
+
+      <div class="field">
         <label>Marital Status</label>
         <select id="marital_status">
-          <option value="Single">Single</option>
-          <option value="Married">Married</option>
+          <option>Single</option>
+          <option>Married</option>
         </select>
+      </div>
+
+      <div class="field">
+        <label>Salaried / Business?</label>
+        <div class="options">
+          <label><input type="radio" name="profession" value="Salaried" /> Salaried</label>
+          <label><input type="radio" name="profession" value="Business" /> Business</label>
+        </div>
       </div>
 
       <div class="field">
         <label>Number of Dependents</label>
-        <input type="number" id="dependents" min="0" value="0" />
+        <select id="dependents">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3+">3+</option>
+        </select>
+      </div>
+
+      <div class="field full">
+        <label>Any major family responsibility planned in next 3–5 years?</label>
+        <textarea id="family_responsibility" placeholder="What is it?"></textarea>
       </div>
 
       <div class="field">
         <label>Average Monthly Household Expenses (₹)</label>
-        <input type="number" id="monthly_expenses" />
+        <input type="number" id="monthly_expenses" min="1" required />
       </div>
 
       <div class="field">
-        <label>Health Insurance Available?</label>
-        <select id="health_insurance">
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
+        <label>Total Insurance and EMIs (₹)</label>
+        <input type="number" id="insurance_emi" />
       </div>
 
       <div class="field">
-        <label>Term Life Insurance Available?</label>
-        <select id="term_insurance">
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
+        <label>Current Monthly Savings (₹)</label>
+        <input type="number" id="monthly_savings" />
       </div>
 
-      <button type="submit">Create Client Profile</button>
+      <div class="field full">
+        <label>Which assets do you currently hold?</label>
+        <div class="options wrap">
+          <label><input type="checkbox" value="Savings Account" /> Savings Account</label>
+          <label><input type="checkbox" value="FD" /> FD</label>
+          <label><input type="checkbox" value="Mutual Funds" /> Mutual Funds</label>
+          <label><input type="checkbox" value="EPF/PPF/NPS" /> EPF / PPF / NPS</label>
+          <label><input type="checkbox" value="Insurance Policies" /> Insurance Policies</label>
+          <label><input type="checkbox" value="Gold" /> Gold</label>
+          <label><input type="checkbox" value="Real Estate" /> Real Estate</label>
+        </div>
+      </div>
+
+      <!-- RISK & EXPERIENCE -->
+      <div class="field">
+        <label>Do you have health insurance?</label>
+        <div class="options">
+          <label><input type="radio" name="health_insurance" value="true" /> Yes</label>
+          <label><input type="radio" name="health_insurance" value="false" /> No</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Do you have term life insurance?</label>
+        <div class="options">
+          <label><input type="radio" name="term_insurance" value="true" /> Yes</label>
+          <label><input type="radio" name="term_insurance" value="false" /> No</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Have you invested before?</label>
+        <div class="options">
+          <label><input type="radio" name="invested_before" value="Yes" /> Yes</label>
+          <label><input type="radio" name="invested_before" value="No" /> No</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Years of Investment Experience</label>
+        <div class="options">
+          <label><input type="radio" name="experience" value="New" /> New</label>
+          <label><input type="radio" name="experience" value="3+ Years" /> 3+ Years</label>
+          <label><input type="radio" name="experience" value="5+ Years" /> 5+ Years</label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <button type="submit">Submit & Create Profile</button>
+      </div>
+
     </form>
 
     <div id="message"></div>
@@ -103,9 +165,7 @@
   Wealth & Investment Advisory · Mutual fund investments are subject to market risks.
 </footer>
 
-<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="onboard.js"></script>
-
 </body>
 </html>
