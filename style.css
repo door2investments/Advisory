@@ -1,0 +1,179 @@
+/* ===============================
+   GLOBAL RESET & BASE
+================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f4f6fb;
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+/* ===============================
+   LAYOUT
+================================ */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ===============================
+   CARDS
+================================ */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 30px rgba(15, 42, 68, 0.06);
+}
+
+/* ===============================
+   HEADINGS
+================================ */
+h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  color: #0f2a44;
+}
+
+h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: #0f2a44;
+}
+
+/* ===============================
+   TEXT & META
+================================ */
+.meta {
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* ===============================
+   GOALS GRID
+================================ */
+.goal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.goal-box {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.goal-box span {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.goal-box strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 18px;
+  color: #0f2a44;
+}
+
+/* ===============================
+   RETIREMENT SNAPSHOT
+================================ */
+.snapshot {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.snapshot div {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.snapshot span {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.snapshot strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 18px;
+  color: #0f2a44;
+}
+
+/* ===============================
+   STATUS TAGS
+================================ */
+.tag {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tag-yes {
+  background: #e6f9f0;
+  color: #047857;
+}
+
+.tag-no {
+  background: #fdecec;
+  color: #b91c1c;
+}
+
+/* ===============================
+   ADVISOR NOTES
+================================ */
+#advisornotes,
+#advisornotes li {
+  padding-left: 18px;
+}
+
+#advisornotes li {
+  margin-bottom: 8px;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+footer {
+  margin-top: 24px;
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* ===============================
+   MOBILE OPTIMIZATION
+================================ */
+@media (max-width: 768px) {
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  .goal-grid,
+  .snapshot {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 18px;
+  }
+}
