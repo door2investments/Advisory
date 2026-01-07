@@ -1,5 +1,5 @@
-const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_PUBLIC_ANON_KEY";
+const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
@@ -11,7 +11,7 @@ const baseUrl = `${location.origin}/client.html?token=`;
 
 async function loadClients() {
   const { data, error } = await supabaseClient
-    .from("clients")
+    .from("form_responses")
     .select("full_name, mobile_number, access_token")
     .order("timestamp", { ascending: false });
 
