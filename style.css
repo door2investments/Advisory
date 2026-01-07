@@ -282,21 +282,18 @@ footer {
      background: #d4e9e4;
   } */
 .brand-container.brand-row {
-    flex-direction: row;          /* force single row */
+    flex-direction: column;     /* stack everything */
     align-items: center;
-    justify-content: space-between;
-    padding: 16px 14px;
-    gap: 8px;
+    text-align: center;
+    padding: 16px 14px 14px;
+    gap: 6px;
   }
 
-  /* Brand name compact */
+  /* Brand name */
   .brand-left h1 {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 65%;
   }
 
   /* Hide subtitle on mobile */
@@ -304,15 +301,16 @@ footer {
     display: none;
   }
 
-  /* Contact compact */
+  /* Contact below brand */
   .brand-contact {
-    margin-left: auto;
-    align-items: flex-end;
-    font-size: 12px;
-    gap: 2px;
+    margin-left: 0;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
   }
 
   .brand-contact span {
+    display: block;            /* phone & email on separate lines */
     white-space: nowrap;
   }
 
