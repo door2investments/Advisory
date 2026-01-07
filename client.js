@@ -18,7 +18,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
 // 3️⃣ Init Supabase
 
-const supabase = supabaseJs.createClient(
+const supabaseClient = supabaseJs.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
@@ -31,7 +31,7 @@ function formatCurrency(value) {
 
 // 5️⃣ Fetch client data
 async function loadClient() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("form_responses")
     .select("*")
     .eq("mobile_number", clientId)
