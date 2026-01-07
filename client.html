@@ -1,90 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Financial Snapshot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Client Financial Snapshot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<header class="brand-header">
-  <div class="brand-inner">
-    <div class="brand-text">
+
+<!-- ===============================
+     BRAND HEADER
+================================ -->
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="brand-block">
       <h1>Wealth & Investment Advisory</h1>
       <p>Independent Financial Advisory Services</p>
     </div>
 
-    <div class="brand-contact">
+    <div class="advisor-block">
       <span>📞 9390250541</span>
       <span>✉️ door2investments@gmail.com</span>
     </div>
   </div>
 </header>
-<div class="container">
-  <div class="card">
-    <h2 id="name">Client Name</h2>
-    <p class="meta" id="basic"></p>
-  </div>
 
-  <div class="card">
-    <h3>Goals Overview</h3>
-    <div class="goal-grid">
-      <div class="goal-box">
-        <span>Short Term (0–3 yrs)</span>
-        <strong id="shortGoal"></strong>
-      </div>
-      <div class="goal-box">
-        <span>Medium Term (3–7 yrs)</span>
-        <strong id="mediumGoal"></strong>
-      </div>
-      <div class="goal-box">
-        <span>Long Term (7+ yrs)</span>
-        <strong id="longGoal"></strong>
+<!-- ===============================
+     DASHBOARD
+================================ -->
+<div class="dashboard">
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- Client Header -->
+    <div class="card">
+      <h2 id="name">Client Name</h2>
+      <p class="meta" id="basic"></p>
+    </div>
+
+    <!-- Goals -->
+    <div class="card">
+      <h3>Goals Overview</h3>
+      <div class="goal-grid">
+        <div class="goal-box">
+          <span>Short Term (0–3 yrs)</span>
+          <strong id="shortGoal">₹ 0</strong>
+        </div>
+        <div class="goal-box">
+          <span>Medium Term (3–7 yrs)</span>
+          <strong id="mediumGoal">₹ 0</strong>
+        </div>
+        <div class="goal-box">
+          <span>Long Term (7+ yrs)</span>
+          <strong id="longGoal">₹ 0</strong>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="card">
-    <h3>Retirement Snapshot</h3>
-    <div class="snapshot">
-      <div>
-        <span>Current Monthly Expense</span>
-        <strong id="currExpense"></strong>
-      </div>
-      <div>
-        <span>Expense at Retirement</span>
-        <strong id="retExpense"></strong>
-      </div>
-      <div>
-        <span>Required Corpus</span>
-        <strong id="retCorpus"></strong>
+
+    <!-- Insurance -->
+    <div class="card">
+      <h3>Insurance Status</h3>
+      <p>Health Insurance: <span id="health" class="tag"></span></p>
+      <p>Term Insurance: <span id="term" class="tag"></span></p>
+    </div>
+
+    <!-- Retirement -->
+    <div class="card">
+      <h3>Retirement Snapshot</h3>
+      <div class="snapshot">
+        <div>
+          <span>Current Monthly Expense</span>
+          <strong id="currExpense">₹ 0</strong>
+        </div>
+        <div>
+          <span>Expense at Retirement</span>
+          <strong id="retExpense">₹ 0</strong>
+        </div>
+        <div>
+          <span>Required Corpus</span>
+          <strong id="retCorpus">₹ 0</strong>
+        </div>
       </div>
     </div>
-  </div>
 
-<div class="card">
-  <h3>Advisor Observations</h3>
-  <ul id="advisorNotes"></ul>
+    <!-- Advisor Notes -->
+    <div class="card">
+      <h3>Advisor Observations</h3>
+      <ul id="advisorNotes"></ul>
+    </div>
+
+  </main>
+
+  <!-- SIDE PANEL -->
+  <aside class="side-panel">
+    <div class="side-card">
+      <h4>Client Snapshot</h4>
+      <p><strong>Name:</strong> <span id="sideName">-</span></p>
+      <p><strong>Status:</strong> <span id="sideStatus">-</span></p>
+      <p><strong>Dependents:</strong> <span id="sideDependents">0</span></p>
+    </div>
+
+    <div class="side-card">
+      <h4>Planning Summary</h4>
+      <p>Goals defined across multiple horizons.</p>
+      <p>Retirement planning initiated.</p>
+      <p>Insurance protection reviewed.</p>
+    </div>
+
+    <div class="side-card muted">
+      <p>
+        This snapshot is indicative and prepared for educational
+        and planning purposes only. Mutual fund investments are
+        subject to market risks.
+      </p>
+    </div>
+  </aside>
+
 </div>
 
-  <div class="card">
-    <h3>Insurance Status</h3>
-    <p>
-      Health Insurance:
-      <span id="health" class="tag"></span>
-    </p>
-    <p>
-      Term Insurance:
-      <span id="term" class="tag"></span>
-    </p>
-  </div>
+<footer>
+  Wealth & Investment Advisory · Mutual fund investments are subject to market risks.
+</footer>
 
-  <footer>
-    Wealth & Investment Advisory<br />
-    *Mutual fund investments are subject to market risks.
-    Read all scheme related documents carefully.
-  </footer>
-</div>
-
+<!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<!-- App JS -->
 <script src="client.js"></script>
+
 </body>
 </html>
