@@ -30,7 +30,7 @@ function formatCurrency(value) {
 // Load client data
 async function loadClient() {
   const { data, error } = await supabaseClient
-    .from("clients")
+    .from("form_responses")
     .select("*")
     .eq("access_token", accessToken)
     .single();
