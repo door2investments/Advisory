@@ -14,6 +14,63 @@ body {
 }
 
 /* ===============================
+   BRAND HEADER
+================================ */
+.brand-header {
+  background: linear-gradient(135deg, #0f2a44, #143a5e);
+  color: #ffffff;
+}
+
+.brand-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.brand-text p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #dbeafe;
+}
+
+.brand-contact {
+  text-align: right;
+  font-size: 13px;
+  color: #e0f2fe;
+}
+
+.brand-contact span {
+  display: block;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .brand-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .brand-contact {
+    text-align: left;
+  }
+
+  .brand-text h1 {
+    font-size: 18px;
+  }
+}
+
+/* ===============================
    LAYOUT
 ================================ */
 .container {
