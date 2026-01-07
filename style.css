@@ -17,37 +17,19 @@ body {
 }
 
 /* ===============================
-   BRANDING – VISUAL DISTINCTION
+   BRAND HEADER – FIXED & BALANCED
 ================================ */
-
-/* Branding background strip */
 .brand-header {
-  background: linear-gradient(
-    180deg,
-    #eef3f8 0%,
-    #f7f9fc 100%
-  );
-  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, #e6f4ef 0%, #f3faf7 100%);
+  border-bottom: 1px solid #dde7e2;
 }
 
-/* Branding container */
+/* This is the KEY fix */
 .brand-container {
-  position: relative;
-  max-width: 900px;
+  max-width: 900px;           /* SAME as client cards */
   margin: 0 auto;
-  padding: 28px 20px 24px;
+  padding: 26px 20px 22px;
   text-align: center;
-}
-
-/* Soft separator line under branding */
-.brand-container::after {
-  content: "";
-  display: block;
-  width: 80px;
-  height: 3px;
-  margin: 18px auto 0;
-  background: #cbd5e1;
-  border-radius: 2px;
 }
 
 /* Brand title */
@@ -55,28 +37,38 @@ body {
   margin: 0;
   font-size: 26px;
   font-weight: 700;
-  color: #0f2a44; /* same as card headings */
+  color: #0f2a44;
   letter-spacing: 0.3px;
 }
 
 /* Subtitle */
 .brand-sub {
-  margin: 8px 0 12px;
+  margin: 8px 0 14px;
   font-size: 14px;
   color: #475569;
 }
 
-/* Contact info */
+/* Contact info – centered, subtle */
 .brand-contact {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
   font-size: 13px;
   color: #334155;
   opacity: 0.9;
 }
 
-.brand-contact span {
-  margin: 0 10px;
-  white-space: nowrap;
+/* Soft divider to separate brand from client data */
+.brand-container::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 3px;
+  margin: 18px auto 0;
+  background: #cbd5e1;
+  border-radius: 2px;
 }
+
 
 
 .advisor-block {
@@ -297,15 +289,10 @@ footer {
     font-size: 22px;
   }
 
-  .brand-container::after {
-    margin-top: 14px;
-  }
-
-  .brand-contact span {
-    display: block;
-    margin: 4px 0;
-  }
-  .advisor-block {
+  .brand-contact {
+    flex-direction: column;
+    gap: 6px;
+  }  .advisor-block {
     text-align: left;
   }
 
