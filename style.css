@@ -19,6 +19,14 @@ body {
 /* ===============================
    BRAND HEADER – FINAL FIX
 ================================ */
+.brand-header {
+    background: #d4e9e4;
+    border-bottom: 1px solid #dbe7e2;
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 22px 20px;
+    border-radius: 16px;
+}
 
 .brand-container.brand-row {
   display: flex;
