@@ -1,0 +1,177 @@
+/* ===============================
+   BASE
+================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: #f4f6fb;
+  color: #1f2937;
+}
+
+/* ===============================
+   BRAND HEADER
+================================ */
+.brand-header {
+  background: #e6f4ef;
+  border-bottom: 1px solid #dbe7e2;
+}
+
+.brand-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 22px 20px;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+}
+
+.brand-left h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f2a44;
+}
+
+.brand-sub {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.brand-contact {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 13px;
+  color: #334155;
+  gap: 4px;
+}
+
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.page-wrapper {
+  max-width: 520px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+/* ===============================
+   FORM CARD
+================================ */
+.form-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 26px 24px;
+  box-shadow: 0 12px 32px rgba(15, 42, 68, 0.08);
+}
+
+.form-card h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #0f2a44;
+}
+
+.form-sub {
+  margin: 10px 0 20px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* ===============================
+   FORM FIELDS
+================================ */
+.field {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #0f2a44;
+}
+
+/* ===============================
+   BUTTON
+================================ */
+button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #0f2a44;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ===============================
+   MESSAGES
+================================ */
+#message {
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.success {
+  color: #047857;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+footer {
+  margin: 24px 0;
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ===============================
+   MOBILE OPTIMIZATION
+================================ */
+@media (max-width: 768px) {
+
+  .brand-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .brand-contact {
+    align-items: center;
+  }
+
+  .page-wrapper {
+    margin: 24px auto;
+  }
+}
