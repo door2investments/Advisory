@@ -13,7 +13,7 @@ async function loadClients() {
   const { data, error } = await supabaseClient
     .from("form_responses")
     .select("full_name, mobile_number, access_token")
-    .order("timestamp", { ascending: false });
+    .order("created_date", { ascending: false });
 
   if (error) {
     tableBody.innerHTML = `<tr><td colspan="3">Error loading clients</td></tr>`;
