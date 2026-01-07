@@ -13,8 +13,8 @@ if (!clientId) {
 }
 
 // 2️⃣ Supabase config (PASTE YOUR VALUES)
-const SUPABASE_URL = "db.lyubfmzrzxntehlghfms.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_PUBLIC_ANON_KEY";
+const SUPABASE_URL = "postgresql://postgres.lyubfmzrzxntehlghfms:Dhriti12062025@aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres";
+const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
 // 3️⃣ Init Supabase
 
