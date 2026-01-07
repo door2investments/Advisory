@@ -10,21 +10,43 @@
 <div class="container">
   <div class="card">
     <h2 id="name">Client Name</h2>
-    <p id="basic"></p>
+    <p class="meta" id="basic"></p>
   </div>
 
   <div class="card">
     <h3>Goals Overview</h3>
-    <p>Short Term: <strong id="shortGoal"></strong></p>
-    <p>Medium Term: <strong id="mediumGoal"></strong></p>
-    <p>Long Term: <strong id="longGoal"></strong></p>
+    <div class="goal-grid">
+      <div class="goal-box">
+        <span>Short Term (0–3 yrs)</span>
+        <strong id="shortGoal"></strong>
+      </div>
+      <div class="goal-box">
+        <span>Medium Term (3–7 yrs)</span>
+        <strong id="mediumGoal"></strong>
+      </div>
+      <div class="goal-box">
+        <span>Long Term (7+ yrs)</span>
+        <strong id="longGoal"></strong>
+      </div>
+    </div>
   </div>
-<div class="card">
-  <h3>Retirement Snapshot</h3>
-  <p>Current Monthly Expense: <strong id="currExpense"></strong></p>
-  <p>Estimated Monthly Expense at Retirement: <strong id="retExpense"></strong></p>
-  <p>Required Retirement Corpus: <strong id="retCorpus"></strong></p>
-</div>
+  <div class="card">
+    <h3>Retirement Snapshot</h3>
+    <div class="snapshot">
+      <div>
+        <span>Current Monthly Expense</span>
+        <strong id="currExpense"></strong>
+      </div>
+      <div>
+        <span>Expense at Retirement</span>
+        <strong id="retExpense"></strong>
+      </div>
+      <div>
+        <span>Required Corpus</span>
+        <strong id="retCorpus"></strong>
+      </div>
+    </div>
+  </div>
 
 <div class="card">
   <h3>Advisor Observations</h3>
@@ -33,13 +55,20 @@
 
   <div class="card">
     <h3>Insurance Status</h3>
-    <p>Health Insurance: <strong id="health"></strong></p>
-    <p>Term Insurance: <strong id="term"></strong></p>
+    <p>
+      Health Insurance:
+      <span id="health" class="tag"></span>
+    </p>
+    <p>
+      Term Insurance:
+      <span id="term" class="tag"></span>
+    </p>
   </div>
 
   <footer>
-    Wealth & Investment Advisory<br>
-    Mutual fund investments are subject to market risks.
+    Wealth & Investment Advisory<br />
+    *Mutual fund investments are subject to market risks.
+    Read all scheme related documents carefully.
   </footer>
 </div>
 
