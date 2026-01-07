@@ -20,43 +20,40 @@ body {
    BRAND HEADER – FINAL FIX
 ================================ */
 
-.brand-header {
-  background: #e6f4ef;
-  border-bottom: 1px solid #dbe7e2;
-}
-
-.brand-container {
-  max-width: 900px;        /* SAME AS CONTENT */
+.brand-container.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 900px;
   margin: 0 auto;
   padding: 26px 20px 22px;
-  text-align: center;
+  text-align: left;
 }
 
-/* Title */
-.brand-container h1 {
+/* Left side (brand name) */
+.brand-left h1 {
   margin: 0;
   font-size: 26px;
   font-weight: 700;
   color: #0f2a44;
 }
 
-/* Subtitle */
 .brand-sub {
-  margin: 8px 0 14px;
+  margin: 8px 0 0;
   font-size: 14px;
   color: #475569;
 }
 
-/* Contact info */
+/* Right side (contact) */
 .brand-contact {
   display: flex;
-  justify-content: center;
   gap: 18px;
   font-size: 13px;
   color: #334155;
+  white-space: nowrap;
 }
 
-/* Divider */
+/* Divider stays centered */
 .brand-container::after {
   content: "";
   display: block;
@@ -278,19 +275,17 @@ footer {
   .app-header {
      background: #d4e9e4;
   } */
-.brand-container {
-    padding: 22px 16px 20px;
-  }
-
-  .brand-container h1 {
-    font-size: 22px;
+.brand-container.brand-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
   }
 
   .brand-contact {
     flex-direction: column;
     gap: 6px;
-  } 
-   /* .advisor-block {
+  }   /* .advisor-block {
     text-align: left;
   } */
 
