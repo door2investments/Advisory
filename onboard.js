@@ -1,5 +1,6 @@
 // Supabase config
 // 2️⃣ Supabase config (PASTE YOUR VALUES)
+
 const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
@@ -15,35 +16,42 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   messageEl.innerHTML = "";
 
+  const assets = Array.from(
+    document.querySelectorAll("input[type=checkbox]:checked")
+  ).map(cb => cb.value);
+
   const payload = {
-    full_name: document.getElementById("full_name").value.trim(),
-    mobile_number: document.getElementById("mobile_number").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    marital_status: document.getElementById("marital_status").value,
-    dependents: Number(document.getElementById("dependents").value || 0),
-    monthly_expenses: Number(document.getElementById("monthly_expenses").value || 0),
-    health_insurance: document.getElementById("health_insurance").value === "true",
-    term_insurance: document.getElementById("term_insurance").value === "true"
+    full_name: full_name.value,
+    mobile_number: mobile_number.value,
+    email: email.value,
+    date_of_birth: date_of_birth.value,
+    gender: document.querySelector("input[name=gender]:checked")?.value,
+    marital_status: marital_status.value,
+    profession: document.querySelector("input[name=profession]:checked")?.value,
+    dependents: dependents.value,
+    family_responsibility: family_responsibility.value,
+    monthly_expenses: Number(monthly_expenses.value),
+    insurance_emi: Number(insurance_emi.value || 0),
+    monthly_savings: Number(monthly_savings.value || 0),
+    assets_held: assets,
+    health_insurance: document.querySelector("input[name=health_insurance]:checked")?.value === "true",
+    term_insurance: document.querySelector("input[name=term_insurance]:checked")?.value === "true",
+    invested_before: document.querySelector("input[name=invested_before]:checked")?.value,
+    investment_experience: document.querySelector("input[name=experience]:checked")?.value
   };
 
-  const { data, error } = await supabaseClient
-    .from("form_responses")
-    .insert(payload)
-    .select("access_token")
-    .single();
+  const { error } = await supabaseClient.from("form_responses").insert(payload);
 
   if (error) {
-    messageEl.innerHTML = `<div class="error">${error.message}</div>`;
+    if (error.message.includes("mobile")) {
+      messageEl.innerHTML = `<p class="error">Mobile number already exists.</p>`;
+    } else {
+      messageEl.innerHTML = `<p class="error">${error.message}</p>`;
+    }
     return;
   }
 
-  messageEl.innerHTML = `
-    <div class="success">
-      Client profile created successfully.<br /><br />
-      <strong>Client Access Link:</strong><br />
-      ${location.origin}/client.html?token=${data.access_token}
-    </div>
-  `;
-
+  messageEl.innerHTML = `<p class="success">Profile created successfully.</p>`;
   form.reset();
 });
+
