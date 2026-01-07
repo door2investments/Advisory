@@ -1,8 +1,3 @@
-/************************************
- * Client Dashboard - Supabase
- * Wealth & Investment Advisory
- ************************************/
-
 // 1️⃣ Read client ID from URL
 const params = new URLSearchParams(window.location.search);
 const clientId = params.get("id");
