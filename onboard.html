@@ -150,7 +150,140 @@
           <label><input type="radio" name="experience" value="5+ Years" /> 5+ Years</label>
         </div>
       </div>
+      <!-- INVESTMENT BEHAVIOUR & DECISIONS -->
+      
+      <div class="field">
+        <label>Who makes investment decisions?</label>
+        <div class="options">
+          <label><input type="radio" name="decision_maker" value="Self" /> Self</label>
+          <label><input type="radio" name="decision_maker" value="Family" /> Family</label>
+          <label><input type="radio" name="decision_maker" value="Advisor" /> Advisor</label>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>How would you rate your investment knowledge?</label>
+        <div class="options">
+          <label><input type="radio" name="investment_knowledge" value="Beginner" /> Beginner</label>
+          <label><input type="radio" name="investment_knowledge" value="Intermediate" /> Intermediate</label>
+          <label><input type="radio" name="investment_knowledge" value="Advanced" /> Advanced</label>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>If markets fall 20%, what will you do?</label>
+        <div class="options">
+          <label><input type="radio" name="market_fall_response" value="Panic & Sell" /> Panic & Sell</label>
+          <label><input type="radio" name="market_fall_response" value="Hold" /> Hold</label>
+          <label><input type="radio" name="market_fall_response" value="Invest More" /> Invest More</label>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>Have you ever sold investments due to fear?</label>
+        <div class="options">
+          <label><input type="radio" name="sold_due_to_fear" value="Yes" /> Yes</label>
+          <label><input type="radio" name="sold_due_to_fear" value="No" /> No</label>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>How often do you track investments?</label>
+        <div class="options">
+          <label><input type="radio" name="tracking_frequency" value="Regularly" /> Regularly</label>
+          <label><input type="radio" name="tracking_frequency" value="Occasionally" /> Occasionally</label>
+          <label><input type="radio" name="tracking_frequency" value="Rarely" /> Rarely</label>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>Primary Investment Objective</label>
+        <div class="options">
+          <label><input type="radio" name="investment_objective" value="Capital Protection" /> Capital Protection</label>
+          <label><input type="radio" name="investment_objective" value="Regular Income" /> Regular Income</label>
+          <label><input type="radio" name="investment_objective" value="Wealth Creation" /> Wealth Creation</label>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>Investment Time Horizon</label>
+        <select id="investment_horizon">
+          <option value="<1 year">&lt; 1 year</option>
+          <option value="1-3 years">1–3 years</option>
+          <option value="3-5 years">3–5 years</option>
+          <option value="5-10 years">5–10 years</option>
+          <option value="10+ years">10+ years</option>
+        </select>
+      </div>
+      
+      <div class="field">
+        <label>If ₹10L investment becomes ₹8L temporarily, what will you do?</label>
+        <div class="options">
+          <label><input type="radio" name="loss_reaction" value="Exit" /> Exit</label>
+          <label><input type="radio" name="loss_reaction" value="Hold" /> Hold</label>
+          <label><input type="radio" name="loss_reaction" value="Add More" /> Add More</label>
+        </div>
+      </div>
+      
+      <!-- GOALS -->
+      
+      <div class="field full">
+        <label>What are your Short-Term Goals (0–3 years)?</label>
+        <textarea id="short_term_goals" placeholder="Enter short-term goals"></textarea>
+      </div>
+      
+      <div class="field full">
+        <label>What are your Medium-Term Goals (3–7 years)?</label>
+        <textarea id="medium_term_goals" placeholder="Enter medium-term goals"></textarea>
+      </div>
+      
+      <div class="field full">
+        <label>What are your Long-Term Goals (7+ years)?</label>
+        <textarea id="long_term_goals" placeholder="Enter long-term goals"></textarea>
+      </div>
+      
+      <div class="field">
+        <label>Preferred Investment Mode</label>
+        <div class="options">
+          <label><input type="radio" name="investment_mode" value="SIP" /> SIP</label>
+          <label><input type="radio" name="investment_mode" value="Lumpsum" /> Lumpsum</label>
+          <label><input type="radio" name="investment_mode" value="Both" /> Both</label>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>Expectation from Advisor</label>
+        <div class="options">
+          <label><input type="radio" name="advisor_expectation" value="Execution Only" /> Execution Only</label>
+          <label><input type="radio" name="advisor_expectation" value="Guidance & Monitoring" /> Guidance & Monitoring</label>
+          <label><input type="radio" name="advisor_expectation" value="Complete Financial Planning" /> Complete Financial Planning</label>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>Amount required for Short-Term Goals (₹)</label>
+        <input type="number" id="short_term_amount" />
+      </div>
+      
+      <div class="field">
+        <label>Amount required for Medium-Term Goals (₹)</label>
+        <input type="number" id="medium_term_amount" />
+      </div>
+      
+      <div class="field">
+        <label>Amount required for Long-Term Goals (₹)</label>
+        <input type="number" id="long_term_amount" />
+      </div>
+      
+      <div class="field">
+        <label>Is your retirement planned?</label>
+        <div class="options">
+          <label><input type="radio" name="retirement_planned" value="Yes" /> Yes</label>
+          <label><input type="radio" name="retirement_planned" value="No" /> No</label>
+        </div>
+      </div>
 
+      
       <div class="field full">
         <button type="submit">Submit & Create Profile</button>
       </div>
