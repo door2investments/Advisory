@@ -37,7 +37,7 @@ form.addEventListener("submit", async (e) => {
     health_insurance: document.querySelector("input[name=health_insurance]:checked")?.value === "true",
     term_insurance: document.querySelector("input[name=term_insurance]:checked")?.value === "true",
     invested_before: document.querySelector("input[name=invested_before]:checked")?.value,
-    investment_experience: document.querySelector("input[name=experience]:checked")?.value
+    investment_experience: document.querySelector("input[name=experience]:checked")?.value,
 
 // ================================
 // INVESTMENT BEHAVIOUR & PROFILE
