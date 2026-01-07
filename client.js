@@ -18,7 +18,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
 // 3️⃣ Init Supabase
 
-const supabase = window.supabase.createClient(
+const supabase = supabaseJs.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
