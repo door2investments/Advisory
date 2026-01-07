@@ -14,34 +14,67 @@ body {
 }
 
 /* ===============================
-   APP HEADER (BRANDING)
+   BRANDING – VISUAL DISTINCTION
 ================================ */
-.app-header {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+
+/* Branding background strip */
+.brand-header {
+  background: linear-gradient(
+    180deg,
+    #eef3f8 0%,
+    #f7f9fc 100%
+  );
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.app-header-inner {
-  max-width: 1200px;
+/* Branding container */
+.brand-container {
+  position: relative;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 28px 20px 24px;
+  text-align: center;
 }
 
-.brand-block h1 {
+/* Soft separator line under branding */
+.brand-container::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  margin: 18px auto 0;
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+/* Brand title */
+.brand-container h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
-  color: #0f2a44;
+  color: #0f2a44; /* same as card headings */
+  letter-spacing: 0.3px;
 }
 
-.brand-block p {
-  margin: 6px 0 0;
+/* Subtitle */
+.brand-sub {
+  margin: 8px 0 12px;
   font-size: 14px;
-  color: #64748b;
+  color: #475569;
 }
+
+/* Contact info */
+.brand-contact {
+  font-size: 13px;
+  color: #334155;
+  opacity: 0.9;
+}
+
+.brand-contact span {
+  margin: 0 10px;
+  white-space: nowrap;
+}
+
 
 .advisor-block {
   text-align: right;
@@ -250,7 +283,22 @@ footer {
     align-items: flex-start;
     gap: 12px;
   }
+.brand-container {
+    padding: 22px 16px 20px;
+  }
 
+  .brand-container h1 {
+    font-size: 22px;
+  }
+
+  .brand-container::after {
+    margin-top: 14px;
+  }
+
+  .brand-contact span {
+    display: block;
+    margin: 4px 0;
+  }
   .advisor-block {
     text-align: left;
   }
