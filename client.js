@@ -32,7 +32,7 @@ function formatCurrency(value) {
 // 5️⃣ Fetch client data
 async function loadClient() {
   const { data, error } = await supabase
-    .from("clients")
+    .from("form_responses")
     .select("*")
     .eq("mobile_number", clientId)
     .single();
