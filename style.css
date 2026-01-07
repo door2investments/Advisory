@@ -31,19 +31,14 @@ body {
 .brand-container.brand-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   max-width: 900px;
   margin: 0 auto;
   padding: 26px 20px 22px;
-  text-align: left;
 }
 
-/* Left side (brand name) */
-.brand-left h1 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 700;
-  color: #0f2a44;
+/* Left block */
+.brand-left {
+  text-align: left;
 }
 
 .brand-sub {
@@ -54,8 +49,11 @@ body {
 
 /* Right side (contact) */
 .brand-contact {
+  margin-left: auto;        /* 🔥 THIS IS THE REAL FIX */
   display: flex;
-  gap: 18px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
   font-size: 13px;
   color: #334155;
   white-space: nowrap;
@@ -291,9 +289,9 @@ footer {
   }
 
   .brand-contact {
-    flex-direction: column;
-    gap: 6px;
-  }   /* .advisor-block {
+    margin-left: 0;
+    align-items: center;
+  }  /* .advisor-block {
     text-align: left;
   } */
 
