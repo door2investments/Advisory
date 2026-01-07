@@ -1,5 +1,5 @@
 /* ===============================
-   GLOBAL RESET & BASE
+   BASE RESET
 ================================ */
 * {
   box-sizing: border-box;
@@ -14,79 +14,66 @@ body {
 }
 
 /* ===============================
-   BRAND HEADER
+   APP HEADER (BRANDING)
 ================================ */
-.brand-header {
-  background: linear-gradient(135deg, #0f2a44, #143a5e);
-  color: #ffffff;
+.app-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.brand-inner {
-  max-width: 900px;
+.app-header-inner {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 16px 20px;
+  padding: 20px 24px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  align-items: center;
 }
 
-.brand-text h1 {
+.brand-block h1 {
   margin: 0;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: 0.3px;
+  color: #0f2a44;
 }
 
-.brand-text p {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: #dbeafe;
+.brand-block p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #64748b;
 }
 
-.brand-contact {
+.advisor-block {
   text-align: right;
-  font-size: 13px;
-  color: #e0f2fe;
+  font-size: 14px;
+  color: #334155;
 }
 
-.brand-contact span {
+.advisor-block span {
   display: block;
   line-height: 1.4;
 }
 
-@media (max-width: 768px) {
-  .brand-inner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .brand-contact {
-    text-align: left;
-  }
-
-  .brand-text h1 {
-    font-size: 18px;
-  }
+/* ===============================
+   DASHBOARD LAYOUT
+================================ */
+.dashboard {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
 }
 
 /* ===============================
-   LAYOUT
+   MAIN CONTENT
 ================================ */
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* ===============================
-   CARDS
-================================ */
-.card {
+.main-content .card {
   background: #ffffff;
   border-radius: 16px;
   padding: 22px 24px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   box-shadow: 0 10px 30px rgba(15, 42, 68, 0.06);
 }
 
@@ -94,19 +81,25 @@ body {
    HEADINGS
 ================================ */
 h2 {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   font-size: 22px;
   color: #0f2a44;
 }
 
 h3 {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   font-size: 18px;
   color: #0f2a44;
 }
 
+h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: #0f2a44;
+}
+
 /* ===============================
-   TEXT & META
+   META TEXT
 ================================ */
 .meta {
   font-size: 14px;
@@ -124,8 +117,8 @@ h3 {
 
 .goal-box {
   background: #f8fafc;
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 14px;
+  padding: 18px;
   text-align: center;
 }
 
@@ -138,7 +131,7 @@ h3 {
 .goal-box strong {
   display: block;
   margin-top: 6px;
-  font-size: 18px;
+  font-size: 20px;
   color: #0f2a44;
 }
 
@@ -153,8 +146,8 @@ h3 {
 
 .snapshot div {
   background: #f8fafc;
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 14px;
+  padding: 18px;
   text-align: center;
 }
 
@@ -166,16 +159,16 @@ h3 {
 .snapshot strong {
   display: block;
   margin-top: 6px;
-  font-size: 18px;
+  font-size: 20px;
   color: #0f2a44;
 }
 
 /* ===============================
-   STATUS TAGS
+   TAGS (YES / NO)
 ================================ */
 .tag {
   display: inline-block;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
@@ -194,35 +187,75 @@ h3 {
 /* ===============================
    ADVISOR NOTES
 ================================ */
-#advisornotes,
-#advisornotes li {
+#adviserNotes,
+#adviserNotes li {
   padding-left: 18px;
 }
 
-#advisornotes li {
+#adviserNotes li {
   margin-bottom: 8px;
+}
+
+/* ===============================
+   SIDE PANEL
+================================ */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.side-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(15, 42, 68, 0.05);
+}
+
+.side-card p {
+  font-size: 14px;
+  color: #475569;
+  margin: 6px 0;
+}
+
+.side-card.muted {
+  background: #f8fafc;
+  font-size: 12px;
+  color: #64748b;
 }
 
 /* ===============================
    FOOTER
 ================================ */
 footer {
-  margin-top: 24px;
+  margin: 24px 0;
   font-size: 12px;
   color: #6b7280;
   text-align: center;
 }
 
 /* ===============================
-   MOBILE OPTIMIZATION
+   MOBILE RESPONSIVE
 ================================ */
-@media (max-width: 768px) {
-  h2 {
-    font-size: 20px;
+@media (max-width: 1024px) {
+  .dashboard {
+    grid-template-columns: 1fr;
   }
 
-  h3 {
-    font-size: 16px;
+  .side-panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .advisor-block {
+    text-align: left;
   }
 
   .goal-grid,
@@ -230,7 +263,15 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .card {
+  .main-content .card {
     padding: 18px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 16px;
   }
 }
