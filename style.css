@@ -282,19 +282,44 @@ footer {
      background: #d4e9e4;
   } */
 .brand-container.brand-row {
-    flex-direction: column;
+    flex-direction: row;          /* force single row */
     align-items: center;
-    text-align: center;
-    gap: 12px;
+    justify-content: space-between;
+    padding: 16px 14px;
+    gap: 8px;
   }
 
-  .brand-contact {
-    margin-left: 0;
-    align-items: center;
-  }  /* .advisor-block {
-    text-align: left;
-  } */
+  /* Brand name compact */
+  .brand-left h1 {
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 65%;
+  }
 
+  /* Hide subtitle on mobile */
+  .brand-sub {
+    display: none;
+  }
+
+  /* Contact compact */
+  .brand-contact {
+    margin-left: auto;
+    align-items: flex-end;
+    font-size: 12px;
+    gap: 2px;
+  }
+
+  .brand-contact span {
+    white-space: nowrap;
+  }
+
+  /* Remove decorative divider */
+  .brand-container::after {
+    display: none;
+  }
   .goal-grid,
   .snapshot {
     grid-template-columns: 1fr;
