@@ -4,9 +4,9 @@
 * {
   box-sizing: border-box;
 }
-.app-header {
+/* .app-header {
    background: #d4e9e4;
-}
+} */
 
 body {
   margin: 0;
@@ -17,28 +17,27 @@ body {
 }
 
 /* ===============================
-   BRAND HEADER – FIXED & BALANCED
+   BRAND HEADER – FINAL FIX
 ================================ */
+
 .brand-header {
-  background: linear-gradient(180deg, #e6f4ef 0%, #f3faf7 100%);
-  border-bottom: 1px solid #dde7e2;
+  background: #e6f4ef;
+  border-bottom: 1px solid #dbe7e2;
 }
 
-/* This is the KEY fix */
 .brand-container {
-  max-width: 900px;           /* SAME as client cards */
+  max-width: 900px;        /* SAME AS CONTENT */
   margin: 0 auto;
   padding: 26px 20px 22px;
   text-align: center;
 }
 
-/* Brand title */
+/* Title */
 .brand-container h1 {
   margin: 0;
   font-size: 26px;
   font-weight: 700;
   color: #0f2a44;
-  letter-spacing: 0.3px;
 }
 
 /* Subtitle */
@@ -48,21 +47,20 @@ body {
   color: #475569;
 }
 
-/* Contact info – centered, subtle */
+/* Contact info */
 .brand-contact {
   display: flex;
   justify-content: center;
   gap: 18px;
   font-size: 13px;
   color: #334155;
-  opacity: 0.9;
 }
 
-/* Soft divider to separate brand from client data */
+/* Divider */
 .brand-container::after {
   content: "";
   display: block;
-  width: 70px;
+  width: 60px;
   height: 3px;
   margin: 18px auto 0;
   background: #cbd5e1;
@@ -70,17 +68,16 @@ body {
 }
 
 
-
-.advisor-block {
+/* .advisor-block {
   text-align: right;
   font-size: 14px;
   color: #334155;
-}
+} */
 
-.advisor-block span {
+/* .advisor-block span {
   display: block;
   line-height: 1.4;
-}
+} */
 
 /* ===============================
    DASHBOARD LAYOUT
@@ -273,14 +270,14 @@ footer {
 }
 
 @media (max-width: 768px) {
-  .app-header-inner {
+  /* .app-header-inner {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
   .app-header {
      background: #d4e9e4;
-  }
+  } */
 .brand-container {
     padding: 22px 16px 20px;
   }
@@ -292,9 +289,10 @@ footer {
   .brand-contact {
     flex-direction: column;
     gap: 6px;
-  }  .advisor-block {
+  } 
+   /* .advisor-block {
     text-align: left;
-  }
+  } */
 
   .goal-grid,
   .snapshot {
