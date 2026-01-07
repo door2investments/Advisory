@@ -39,6 +39,14 @@ async function loadClient() {
   }
 
   renderClient(data);
+  document.getElementById("health").classList.add(
+  data.health_insurance ? "tag-yes" : "tag-no"
+);
+
+document.getElementById("term").classList.add(
+  data.term_insurance ? "tag-yes" : "tag-no"
+);
+
 }
 
 // 6️⃣ Render client dashboard
