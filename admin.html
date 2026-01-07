@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Client Links | Wealth & Investment Advisory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      background: #f4f6fb;
+      color: #1f2937;
+    }
+
+    /* Branding */
+    .brand-header {
+      background: #e6f4ef;
+      border-bottom: 1px solid #dbe7e2;
+    }
+    .brand-container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .brand-left h1 {
+      margin: 0;
+      font-size: 22px;
+      color: #0f2a44;
+    }
+    .brand-sub {
+      font-size: 13px;
+      color: #475569;
+    }
+
+    /* Page */
+    .page {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      color: #0f2a44;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(15,42,68,.08);
+    }
+
+    thead {
+      background: #0f2a44;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .copy {
+      font-size: 12px;
+      color: #475569;
+      cursor: pointer;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      table, thead {
+        display: none;
+      }
+
+      tbody, tr, td {
+        display: block;
+        width: 100%;
+      }
+
+      tr {
+        background: #fff;
+        margin-bottom: 14px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(15,42,68,.06);
+        padding: 12px;
+      }
+
+      td {
+        padding: 6px 0;
+        font-size: 13px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: block;
+        color: #475569;
+        margin-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="brand-header">
+  <div class="brand-container">
+    <div class="brand-left">
+      <h1>Wealth & Investment Advisory</h1>
+      <div class="brand-sub">Client Access Links</div>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+  <h2>Client Summary Links</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Client Name</th>
+        <th>Mobile</th>
+        <th>Client URL</th>
+      </tr>
+    </thead>
+    <tbody id="clientsBody"></tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="clients.js"></script>
+</body>
+</html>
