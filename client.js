@@ -145,5 +145,6 @@ function renderClient(data) {
   });
 }
 
+
 // 7️⃣ Load on page open
 loadClient();
