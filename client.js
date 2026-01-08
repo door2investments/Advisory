@@ -113,13 +113,13 @@ function renderClient(data) {
   else
     notes.push("You have sufficient time to build retirement corpus with discipline.");
 
-  const ul = document.getElementById("advisorNotes");
-  ul.innerHTML = "";
-  notes.forEach(note => {
-    const li = document.createElement("li");
-    li.innerText = note;
-    ul.appendChild(li);
-  });
+  // const ul = document.getElementById("advisorNotes");
+  // ul.innerHTML = "";
+  // notes.forEach(note => {
+  //   const li = document.createElement("li");
+  //   li.innerText = note;
+  //   ul.appendChild(li);
+  // });
 }
 async function loadAdvisorObservations(clientMobile) {
   const container = document.getElementById("observationsContainer");
