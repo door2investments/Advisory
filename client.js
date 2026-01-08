@@ -59,11 +59,11 @@ function renderClient(data) {
 
   // Goals
   document.getElementById("shortGoal").innerText =
-    formatCurrency(data.short_term_goal);
+    formatCurrency(data.short_term_amount);
   document.getElementById("mediumGoal").innerText =
-    formatCurrency(data.medium_term_goal);
+    formatCurrency(data.medium_term_amount);
   document.getElementById("longGoal").innerText =
-    formatCurrency(data.long_term_goal);
+    formatCurrency(data.long_term_amount);
 
   // Insurance
   const healthEl = document.getElementById("health");
