@@ -76,4 +76,40 @@ Mutual fund investments are subject to market risks.
 `;
 
     const response = await fetch("https://api.resend.com/emails", {
-      method: "POST"
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: "Wealth & Investment Advisory <onboarding@resend.dev>",
+        to: [clientEmail],
+        cc: ["door2investments@gmail.com"],
+        subject: "Welcome to Wealth & Investment Advisory",
+        html
+      })
+    });
+
+    const result = await response.text();
+
+    if (!response.ok) {
+      console.error("Resend error:", result);
+      return new Response(
+        JSON.stringify({ error: "Email sending failed" }),
+        { status: 500, headers: corsHeaders }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      { headers: corsHeaders }
+    );
+
+  } catch (err) {
+    console.error(err);
+    return new Response(
+      JSON.stringify({ error: err.message }),
+      { status: 500, headers: corsHeaders }
+    );
+  }
+});
