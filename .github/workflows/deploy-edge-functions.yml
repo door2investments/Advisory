@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "supabase/functions/**"
+  workflow_dispatch:   # ✅ THIS IS REQUIRED
 
 jobs:
   deploy:
