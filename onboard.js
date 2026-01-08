@@ -6,6 +6,11 @@ const modal = document.getElementById("resultModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalMessage = document.getElementById("modalMessage");
 
+const form = document.getElementById("onboardingForm");
+const submitBtn = document.getElementById("submitBtn");
+const btnText = submitBtn.querySelector(".btn-text");
+const spinner = submitBtn.querySelector(".spinner");
+
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
@@ -17,7 +22,9 @@ const messageEl = document.getElementById("message");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   messageEl.innerHTML = "";
-
+  submitBtn.disabled = true;
+  btnText.textContent = "Submitting...";
+  spinner.classList.remove("hidden");
   const assets = Array.from(
     document.querySelectorAll("input[type=checkbox]:checked")
   ).map(cb => cb.value);
@@ -152,25 +159,28 @@ if (error) {
   );
   return;
 }
-const summaryLink =
-  `${location.origin}/Advisory/client.html?token=${data.access_token}`;
+// const summaryLink =
+//   `${location.origin}/Advisory/client.html?token=${data.access_token}`;
 
-fetch(
-  "https://lyubfmzrzxntehlghfms.supabase.co/functions/v1/send-onboarding-email",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      // "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-    },
-    body: JSON.stringify({
-      clientName: payload.full_name,
-      clientEmail: payload.email,
-      summaryLink
-    })
-  }
-);
-
+// fetch(
+//   "https://lyubfmzrzxntehlghfms.supabase.co/functions/v1/send-onboarding-email",
+//   {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       // "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+//     },
+//     body: JSON.stringify({
+//       clientName: payload.full_name,
+//       clientEmail: payload.email,
+//       summaryLink
+//     })
+//   }
+// );
+// 🔓 Re-enable button on error
+    submitBtn.disabled = false;
+    btnText.textContent = "Submit";
+    spinner.classList.add("hidden");
 showModal(
   "Onboarding Successful",
   "Your profile has been created successfully.<br/><br/>Click OK to view your financial summary.",
