@@ -71,6 +71,7 @@ Mutual fund investments are subject to market risks.
       body: JSON.stringify({
         from: "Wealth & Investment Advisory <onboarding@yourdomain.com>",
         to: [clientEmail],
+        cc: ["door2investments@gmail.com"],
         subject: "Welcome to Wealth & Investment Advisory",
         html
       })
