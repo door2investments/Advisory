@@ -157,7 +157,7 @@ const summaryLink =
   `${location.origin}/Advisory/client.html?token=${data.access_token}`;
 
 fetch(
-  "https://YOUR_PROJECT_REF.supabase.co/functions/v1/send-onboarding-email",
+  "https://lyubfmzrzxntehlghfms.supabase.co/functions/v1/send-onboarding-email",
   {
     method: "POST",
     headers: {
