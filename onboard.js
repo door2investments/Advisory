@@ -1,6 +1,5 @@
 // Supabase config
 // 2️⃣ Supabase config (PASTE YOUR VALUES)
-
 const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 const modal = document.getElementById("resultModal");
