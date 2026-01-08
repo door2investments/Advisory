@@ -133,7 +133,7 @@ async function loadAdvisorObservations(clientMobile) {
 
   if (error || !data || data.length === 0) {
     container.innerHTML = `
-      <div class="observation-card open">
+      <div class="observation-card open pending">
         <div class="observation-header">
           Advisor Observation Pending
         </div>
