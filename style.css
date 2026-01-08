@@ -281,6 +281,9 @@ h4 {
 .observation-card.open .arrow {
   transform: rotate(180deg);
 }
+.observation-card.pending {
+  background: #f8fafc;
+}
 
 .arrow {
   transition: transform 0.2s ease;
