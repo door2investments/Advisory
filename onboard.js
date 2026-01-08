@@ -6,7 +6,7 @@ const modal = document.getElementById("resultModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalMessage = document.getElementById("modalMessage");
 
-const form = document.getElementById("onboardingForm");
+// const form = document.getElementById("onboardingForm");
 const submitBtn = document.getElementById("submitBtn");
 const btnText = submitBtn.querySelector(".btn-text");
 const spinner = submitBtn.querySelector(".spinner");
