@@ -43,7 +43,7 @@ async function loadClient() {
 
   // Update last accessed timestamp (non-blocking)
   supabaseClient
-    .from("clients")
+    .from("form_responses")
     .update({ last_accessed_at: new Date().toISOString() })
     .eq("id", data.id);
 
@@ -99,6 +99,15 @@ function renderClient(data) {
   document.getElementById("retCorpus").innerText =
     formatCurrency(retirementCorpus);
 
+  if(data.retirement_planned){
+    if (data.retirement_planned.toLowerCase() == "no"){
+      document.getElementById("retPlanned").innerText = "Retirement Snapshot - Not Planned"
+    }
+    else{
+      document.getElementById("retPlanned").innerText = "Retirement Snapshot - Planned"
+    }
+  }
+  
   // Advisor notes
   const notes = [];
 
