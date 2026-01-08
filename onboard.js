@@ -174,6 +174,6 @@ function handleModalOk() {
 
   if (redirectToken) {
     window.location.href =
-      `${location.origin}/client.html?token=${redirectToken}`;
+      `${location.origin}/Advisory/client.html?token=${redirectToken}`;
   }
 }
