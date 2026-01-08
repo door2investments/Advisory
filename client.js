@@ -132,8 +132,18 @@ async function loadAdvisorObservations(clientMobile) {
     .order("observation_date", { ascending: false });
 
   if (error || !data || data.length === 0) {
-    container.innerHTML =
-      "<p style='color:#64748b'>No advisor observations available.</p>";
+    container.innerHTML = `
+      <div class="observation-card open">
+        <div class="observation-header">
+          Advisor Observation Pending
+        </div>
+        <div class="observation-body">
+          Your portfolio details are currently under review.<br/><br/>
+          Advisor observations and recommendations will appear here
+          after the next review cycle.
+        </div>
+      </div>
+    `;
     return;
   }
 
