@@ -93,9 +93,91 @@
       color: #475569;
       cursor: pointer;
     }
+/* ===============================
+   MODAL
+================================ */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 42, 68, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.2);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  color: #0f2a44;
+}
+
+.modal-field {
+  margin-bottom: 14px;
+}
+
+.modal-field label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.modal-field input,
+.modal-field textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.modal-field textarea {
+  min-height: 90px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.modal-actions button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modal-actions .secondary {
+  background: #e5e7eb;
+}
+
+.modal-actions button:not(.secondary) {
+  background: #0f2a44;
+  color: white;
+}
+
+/* Mobile */
 
 @media (max-width: 768px) {
-
+.modal-content {
+    margin: 0 14px;
+  }
   table {
     display: block;
     background: none;
@@ -158,10 +240,49 @@
         <th>Client Name</th>
         <th>Mobile</th>
         <th>Client URL</th>
+        <th>Add Observation</th>
       </tr>
     </thead>
     <tbody id="clientsBody"></tbody>
   </table>
+</div>
+<!-- ===============================
+     ADD OBSERVATION MODAL
+================================ -->
+<div id="observationModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Add Advisor Observation</h3>
+
+    <div class="modal-field">
+      <label>Client Name</label>
+      <input type="text" id="modal_client_name" disabled />
+    </div>
+
+    <div class="modal-field">
+      <label>Mobile Number</label>
+      <input type="text" id="modal_mobile" disabled />
+    </div>
+
+    <div class="modal-field">
+      <label>Observation Date</label>
+      <input type="date" id="modal_date" />
+    </div>
+
+    <div class="modal-field">
+      <label>Observation</label>
+      <textarea
+        id="modal_text"
+        placeholder="Enter advisor observation or recommendation"
+      ></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="secondary" onclick="closeModal()">Cancel</button>
+      <button onclick="saveObservation()">Save</button>
+    </div>
+
+    <div id="modalMessage"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
