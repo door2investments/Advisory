@@ -48,6 +48,7 @@ async function loadClient() {
     .eq("id", data.id);
 
   renderClient(data);
+  loadAdvisorObservations(data.mobile_number)
 }
 
 function renderClient(data) {
@@ -120,6 +121,46 @@ function renderClient(data) {
     ul.appendChild(li);
   });
 }
+async function loadAdvisorObservations(clientMobile) {
+  const container = document.getElementById("observationsContainer");
+  container.innerHTML = "";
+
+  const { data, error } = await supabaseClient
+    .from("advisor_observations")
+    .select("observation_date, observation_text")
+    .eq("client_mobile_number", clientMobile)
+    .order("observation_date", { ascending: false });
+
+  if (error || !data || data.length === 0) {
+    container.innerHTML =
+      "<p style='color:#64748b'>No advisor observations available.</p>";
+    return;
+  }
+
+  data.forEach((obs, index) => {
+    const card = document.createElement("div");
+    card.className = "observation-card" + (index === 0 ? " open" : "");
+
+    card.innerHTML = `
+      <div class="observation-header">
+        ${new Date(obs.observation_date).toDateString()}
+        <span class="arrow">▼</span>
+      </div>
+      <div class="observation-body">
+        ${obs.observation_text.replace(/\n/g, "<br/>")}
+      </div>
+    `;
+
+    card
+      .querySelector(".observation-header")
+      .addEventListener("click", () => {
+        card.classList.toggle("open");
+      });
+
+    container.appendChild(card);
+  });
+}
+
 
 // Init
 loadClient();
