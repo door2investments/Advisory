@@ -2,14 +2,27 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
+// ✅ CORS HEADERS
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*", // or restrict to your domain later
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS"
+};
+
 serve(async (req) => {
+
+  // ✅ Handle preflight request
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
   try {
     const { clientName, clientEmail, summaryLink } = await req.json();
 
     if (!clientEmail || !summaryLink) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -63,30 +76,4 @@ Mutual fund investments are subject to market risks.
 `;
 
     const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        from: "Wealth & Investment Advisory <onboarding@yourdomain.com>",
-        to: [clientEmail],
-        cc: ["door2investments@gmail.com"],
-        subject: "Welcome to Wealth & Investment Advisory",
-        html
-      })
-    });
-
-    if (!response.ok) throw new Error("Email send failed");
-
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { "Content-Type": "application/json" }
-    });
-
-  } catch (err) {
-    return new Response(
-      JSON.stringify({ error: err.message }),
-      { status: 500 }
-    );
-  }
-});
+      method: "POST"
