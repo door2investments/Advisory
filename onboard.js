@@ -3,12 +3,15 @@
 
 const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
+const modal = document.getElementById("resultModal");
+const modalTitle = document.getElementById("modalTitle");
+const modalMessage = document.getElementById("modalMessage");
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
-
+let redirectToken = null;
 const form = document.getElementById("clientForm");
 const messageEl = document.getElementById("message");
 
@@ -122,15 +125,55 @@ retirement_planned: document.querySelector(
   const { error } = await supabaseClient.from("form_responses").insert(payload);
 
   if (error) {
-    if (error.message.includes("mobile")) {
-      messageEl.innerHTML = `<p class="error">Mobile number already exists.</p>`;
-    } else {
-      messageEl.innerHTML = `<p class="error">${error.message}</p>`;
-    }
-    return;
+    // if (error.message.includes("mobile")) {
+    //   messageEl.innerHTML = `<p class="error">Mobile number already exists.</p>`;
+    // } else {
+    //   messageEl.innerHTML = `<p class="error">${error.message}</p>`;
+    // }
+    // return;
+      showModal(
+    "Onboarding Failed",
+    error.message || "Unable to complete onboarding. Please try again."
+  );
+  return;
+
   }
 
-  messageEl.innerHTML = `<p class="success">Profile created successfully.</p>`;
+  // messageEl.innerHTML = `<p class="success">Profile created successfully.</p>`;
+  const { data, error } = await supabaseClient
+  .from("form_responses")
+  .insert(payload)
+  .select("access_token")
+  .single();
+
+if (error) {
+  showModal(
+    "Onboarding Failed",
+    error.message || "Unable to complete onboarding. Please try again."
+  );
+  return;
+}
+
+showModal(
+  "Onboarding Successful",
+  "Your profile has been created successfully.<br/><br/>Click OK to view your financial summary.",
+  data.access_token
+);
+
   form.reset();
 });
+function showModal(title, message, token = null) {
+  modalTitle.textContent = title;
+  modalMessage.innerHTML = message;
+  redirectToken = token;
+  modal.classList.remove("hidden");
+}
 
+function handleModalOk() {
+  modal.classList.add("hidden");
+
+  if (redirectToken) {
+    window.location.href =
+      `${location.origin}/client.html?token=${redirectToken}`;
+  }
+}
