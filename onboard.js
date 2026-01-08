@@ -153,6 +153,24 @@ if (error) {
   );
   return;
 }
+const summaryLink =
+  `${location.origin}/Advisory/client.html?token=${data.access_token}`;
+
+fetch(
+  "https://YOUR_PROJECT_REF.supabase.co/functions/v1/send-onboarding-email",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+    },
+    body: JSON.stringify({
+      clientName: payload.full_name,
+      clientEmail: payload.email,
+      summaryLink
+    })
+  }
+);
 
 showModal(
   "Onboarding Successful",
@@ -177,3 +195,5 @@ function handleModalOk() {
       `${location.origin}/Advisory/client.html?token=${redirectToken}`;
   }
 }
+
+
