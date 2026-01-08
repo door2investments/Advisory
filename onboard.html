@@ -300,6 +300,19 @@
 <footer>
   Wealth & Investment Advisory · Mutual fund investments are subject to market risks.
 </footer>
+<!-- ===============================
+     ONBOARDING RESULT MODAL
+================================ -->
+<div id="resultModal" class="modal hidden">
+  <div class="modal-content">
+    <h3 id="modalTitle">Status</h3>
+    <p id="modalMessage"></p>
+
+    <div class="modal-actions">
+      <button onclick="handleModalOk()">OK</button>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="onboard.js"></script>
