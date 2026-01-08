@@ -122,22 +122,22 @@ retirement_planned: document.querySelector(
     
   };
 
-  const { error } = await supabaseClient.from("form_responses").insert(payload);
+  // const { error } = await supabaseClient.from("form_responses").insert(payload);
 
-  if (error) {
+  // if (error) {
     // if (error.message.includes("mobile")) {
     //   messageEl.innerHTML = `<p class="error">Mobile number already exists.</p>`;
     // } else {
     //   messageEl.innerHTML = `<p class="error">${error.message}</p>`;
     // }
     // return;
-      showModal(
-    "Onboarding Failed",
-    error.message || "Unable to complete onboarding. Please try again."
-  );
-  return;
+  //     showModal(
+  //   "Onboarding Failed",
+  //   error.message || "Unable to complete onboarding. Please try again."
+  // );
+  // return;
 
-  }
+  // }
 
   // messageEl.innerHTML = `<p class="success">Profile created successfully.</p>`;
   const { data, error } = await supabaseClient
