@@ -71,8 +71,8 @@ function renderClient(data) {
   healthEl.classList.add(data.health_insurance ? "tag-yes" : "tag-no");
 
   const termEl = document.getElementById("term");
-  termEl.innerText = data.term_insurance ? "Yes" : "No";
-  termEl.classList.add(data.term_insurance ? "tag-yes" : "tag-no");
+  termEl.innerText = data.term_insurance == "Yes" ? "Yes" : "No";
+  termEl.classList.add(data.term_insurance == "Yes" ? "tag-yes" : "tag-no");
 
   // Retirement
   const inflation = 0.06;
