@@ -3,12 +3,41 @@ function inflateAmount(amount, inflation, years) {
   return amount * Math.pow(1 + inflation / 100, years);
 }
 
+function calculateAge(dateOfBirth) {
+  if (!dateOfBirth) return null;
+
+  const dob = new Date(dateOfBirth);
+  const today = new Date();
+
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+
+  return age;
+}
+
+const RETIREMENT_AGE = 60;
+
+function yearsToRetirement(dob) {
+  const age = calculateAge(dob);
+  if (age === null) return null;
+
+  return Math.max(RETIREMENT_AGE - age, 0);
+}
+
+
 // Retirement corpus (25x rule – industry standard)
 function calculateRetirementCorpus(
   monthlyExpense,
   inflation,
-  yearsToRetirement
+  dob
 ) {
+  const years = yearsToRetirement(dob);
+  if (!years) return null;
+  
   const futureMonthlyExpense =
     inflateAmount(monthlyExpense, inflation, yearsToRetirement);
 
@@ -35,12 +64,13 @@ export async function generateClientPlanningPDF(client) {
 
   doc.line(10, 26, 200, 26);
 
+  let currentY = 20;
   /* ================= CLIENT SUMMARY ================= */
   doc.setFontSize(13);
   doc.text("Client Summary", 10, 35);
 
   doc.autoTable({
-    startY: 40,
+    startY: currentY + 5,
     theme: "grid",
     styles: { fontSize: 10 },
     head: [["Field", "Value"]],
@@ -53,9 +83,9 @@ export async function generateClientPlanningPDF(client) {
       ["Monthly Savings", `₹${client.monthly_savings.toLocaleString("en-IN")}`]
     ]
   });
-
+  currentY = doc.lastAutoTable.finalY + 12;
   /* ================= GOALS ================= */
-  doc.addPage();
+  // doc.addPage();
   doc.setFontSize(13);
   doc.text("Goal Planning (Inflation Adjusted)", 10, 15);
 
@@ -94,7 +124,7 @@ export async function generateClientPlanningPDF(client) {
     });
 
   doc.autoTable({
-    startY: 20,
+    startY: currentY + 5,
     theme: "grid",
     styles: { fontSize: 10 },
     head: [
@@ -102,9 +132,9 @@ export async function generateClientPlanningPDF(client) {
     ],
     body: goalRows
   });
-
+  currentY = doc.lastAutoTable.finalY + 12;
   /* ================= RETIREMENT ================= */
-  doc.addPage();
+  // doc.addPage();
   doc.setFontSize(13);
   doc.text("Retirement Planning", 10, 15);
 
@@ -115,15 +145,23 @@ export async function generateClientPlanningPDF(client) {
   );
 
   doc.autoTable({
-    startY: 20,
+    startY: currentY + 5,
     theme: "grid",
     styles: { fontSize: 10 },
     head: [["Parameter", "Value"]],
     body: [
-      ["Current Monthly Expense", `₹${client.monthly_expenses.toLocaleString("en-IN")}`],
-      ["Years to Retirement", `${client.retirement_years} years`],
-      ["Inflation Assumed", "6%"],
-      ["Required Retirement Corpus", `₹${Math.round(retirementCorpus).toLocaleString("en-IN")}`]
+      ["Current Age", calculateAge(client.date_of_birth)],
+      ["Retirement Age", 60],
+      ["Years to Retirement", yearsToRetirement(client.date_of_birth)],
+      ["Required Retirement Corpus",
+        `₹${Math.round(
+          calculateRetirementCorpus(
+            client.monthly_expenses,
+            6,
+            client.date_of_birth
+          )
+        ).toLocaleString("en-IN")}`
+      ]
     ]
   });
 
