@@ -64,7 +64,7 @@ export async function generateClientPlanningPDF(client) {
 
   doc.line(10, 26, 200, 26);
 
-  let currentY = 20;
+  let currentY = 35;
   /* ================= CLIENT SUMMARY ================= */
   doc.setFontSize(13);
   doc.text("Client Summary", 10, currentY);
