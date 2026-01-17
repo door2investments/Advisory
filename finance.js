@@ -39,7 +39,7 @@ function calculateRetirementCorpus(
   if (!years) return null;
   
   const futureMonthlyExpense =
-    inflateAmount(monthlyExpense, inflation, yearsToRetirement);
+    inflateAmount(monthlyExpense, inflation, years);
 
   const annualExpense = futureMonthlyExpense * 12;
   return annualExpense * 25;
@@ -64,10 +64,10 @@ export async function generateClientPlanningPDF(client) {
 
   doc.line(10, 26, 200, 26);
 
-  let currentY = 40;
+  let currentY = 20;
   /* ================= CLIENT SUMMARY ================= */
   doc.setFontSize(13);
-  doc.text("Client Summary", 10, 35);
+  doc.text("Client Summary", 10, currentY);
 
   doc.autoTable({
     startY: currentY + 5,
@@ -79,15 +79,15 @@ export async function generateClientPlanningPDF(client) {
       ["Age", calculateAge(client.date_of_birth)],
       ["Marital Status", client.marital_status],
       ["Dependents", client.dependents],
-      ["Monthly Expenses", `₹${client.monthly_expenses.toLocaleString("en-IN")}`],
-      ["Monthly Savings", `₹${client.monthly_savings.toLocaleString("en-IN")}`]
+      ["Monthly Expenses", `RS. ${client.monthly_expenses.toLocaleString("en-IN")}`],
+      ["Monthly Savings", `RS. ${client.monthly_savings.toLocaleString("en-IN")}`]
     ]
   });
   currentY = doc.lastAutoTable.finalY + 12;
   /* ================= GOALS ================= */
   // doc.addPage();
   doc.setFontSize(13);
-  doc.text("Goal Planning (Inflation Adjusted)", 10, 15);
+  doc.text("Goal Planning (Inflation Adjusted)", 10, currentY);
 
   const goals = [
     {
@@ -118,8 +118,8 @@ export async function generateClientPlanningPDF(client) {
         g.name,
         g.description || "-",
         `${g.years} years`,
-        `₹${g.amount.toLocaleString("en-IN")}`,
-        `₹${Math.round(inflated).toLocaleString("en-IN")}`
+        `RS. ${g.amount.toLocaleString("en-IN")}`,
+        `RS. ${Math.round(inflated).toLocaleString("en-IN")}`
       ];
     });
 
@@ -136,7 +136,7 @@ export async function generateClientPlanningPDF(client) {
   /* ================= RETIREMENT ================= */
   // doc.addPage();
   doc.setFontSize(13);
-  doc.text("Retirement Planning", 10, 15);
+  doc.text("Retirement Planning", 10, currentY);
 
   // const retirementCorpus = calculateRetirementCorpus(
   //   client.monthly_expenses,
@@ -154,7 +154,7 @@ export async function generateClientPlanningPDF(client) {
       ["Retirement Age", 60],
       ["Years to Retirement", yearsToRetirement(client.date_of_birth)],
       ["Required Retirement Corpus",
-        `₹${Math.round(
+        `RS. ${Math.round(
           calculateRetirementCorpus(
             client.monthly_expenses,
             6,
