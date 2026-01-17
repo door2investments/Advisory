@@ -13,7 +13,7 @@ const supabaseClient = window.supabase.createClient(
 
 const tableBody = document.getElementById("clientsBody");
 const baseUrl = `${location.origin}/Advisory/client.html?token=`;
-const AdminClientUrl = `${location.origin}/Advisory/client.html?token=`;
+const AdminClientUrl = `${location.origin}/Advisory/admin-client.html?token=`;
 
 async function loadClients() {
   const { data, error } = await supabaseClient
@@ -38,7 +38,7 @@ async function loadClients() {
           <a href="${clientUrl}" target="_blank">Open Summary</a><br/>
           <span class="copy" onclick="navigator.clipboard.writeText('${clientUrl}')">
             Copy Link
-          </span>
+          </span><br/>
           <a href="${adminUrl}" target="_blank">Open Full Summary</a><br/>
           <span class="copy" onclick="navigator.clipboard.writeText('${adminUrl}')">
             Copy Link
