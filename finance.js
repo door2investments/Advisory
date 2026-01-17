@@ -16,7 +16,7 @@ function calculateRetirementCorpus(
   return annualExpense * 25;
 }
 
-async function generateClientPlanningPDF(client) {
+export async function generateClientPlanningPDF(client) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   // 🔹 ADD COVER PAGE
