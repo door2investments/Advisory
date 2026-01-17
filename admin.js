@@ -13,6 +13,7 @@ const supabaseClient = window.supabase.createClient(
 
 const tableBody = document.getElementById("clientsBody");
 const baseUrl = `${location.origin}/Advisory/client.html?token=`;
+const AdminClientUrl = `${location.origin}/Advisory/client.html?token=`;
 
 async function loadClients() {
   const { data, error } = await supabaseClient
@@ -26,18 +27,24 @@ async function loadClients() {
   }
 
   data.forEach(client => {
-    const url = baseUrl + client.access_token;
+    const clientUrl = baseUrl + client.access_token;
+    const adminUrl = AdminClientUrl + client.access_token;
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td data-label="Client Name">${client.full_name || "-"}</td>
         <td data-label="Mobile">${client.mobile_number || "-"}</td>
         <td data-label="Client URL">
-          <a href="${url}" target="_blank">Open Summary</a><br/>
-          <span class="copy" onclick="navigator.clipboard.writeText('${url}')">
+          <a href="${clientUrl}" target="_blank">Open Summary</a><br/>
+          <span class="copy" onclick="navigator.clipboard.writeText('${clientUrl}')">
+            Copy Link
+          </span>
+          <a href="${adminUrl}" target="_blank">Open Full Summary</a><br/>
+          <span class="copy" onclick="navigator.clipboard.writeText('${adminUrl}')">
             Copy Link
           </span>
         </td>
+        
         <td data-label="Add Observation">
           <a href="#" onclick="openModal('${client.full_name}','${client.mobile_number}')">
             Add
