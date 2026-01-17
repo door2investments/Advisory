@@ -3,6 +3,20 @@ function inflateAmount(amount, inflation, years) {
   return amount * Math.pow(1 + inflation / 100, years);
 }
 
+function calculateSipRequired(futureValue, annualReturn, years) {
+  const n = years * 12;
+  const r = Math.pow(1 + annualReturn / 100, 1 / 12) - 1;
+
+  if (r === 0) return futureValue / n;
+
+  return futureValue * r / (Math.pow(1 + r, n) - 1);
+}
+
+function formatINR(amount) {
+  return `Rs. ${Math.round(amount).toLocaleString("en-IN")}`;
+}
+
+
 function calculateAge(dateOfBirth) {
   if (!dateOfBirth) return null;
 
@@ -132,7 +146,48 @@ export async function generateClientPlanningPDF(client) {
     ],
     body: goalRows
   });
+
+  // Assumptions
+const goalReturn = 12; // 12% p.a.
+const inflationRate = 6;
+  
+/* ================= Monthly SIP Required to Achieve Goals ================= */
+
+  const sipRows = goals
+  .filter(g => g.amount > 0)
+  .map(g => {
+    const inflatedAmount =
+      g.amount * Math.pow(1 + inflationRate / 100, g.years);
+
+    const sip = calculateSipRequired(
+      inflatedAmount,
+      goalReturn,
+      g.years
+    );
+
+    return [
+      g.name,
+      `${g.years} years`,
+      formatINR(inflatedAmount),
+      formatINR(sip)
+    ];
+  });
+
+let sipStartY = doc.lastAutoTable.finalY + 8;
+
+doc.setFontSize(12);
+doc.text("Monthly SIP Required to Achieve Goals", 10, sipStartY);
+
+doc.autoTable({
+  startY: sipStartY + 4,
+  theme: "grid",
+  styles: { fontSize: 10 },
+  head: [["Goal", "Horizon", "Target Amount", "Required SIP"]],
+  body: sipRows
+});
+
   currentY = doc.lastAutoTable.finalY + 12;
+
   /* ================= RETIREMENT ================= */
   // doc.addPage();
   doc.setFontSize(13);
@@ -165,6 +220,43 @@ export async function generateClientPlanningPDF(client) {
     ]
   });
 
+  const retirementReturn = 10; // conservative
+const retirementInflation = 6;
+
+const years = yearsToRetirement(client.date_of_birth);
+
+const retirementCorpus =
+  calculateRetirementCorpus(
+    client.monthly_expenses,
+    retirementInflation,
+    client.date_of_birth
+  );
+
+const retirementSip = calculateSipRequired(
+  retirementCorpus,
+  retirementReturn,
+  years
+);
+
+let retirementSipY = doc.lastAutoTable.finalY + 8;
+
+doc.setFontSize(12);
+doc.text("Monthly SIP Required for Retirement", 10, retirementSipY);
+
+doc.autoTable({
+  startY: retirementSipY + 4,
+  theme: "grid",
+  styles: { fontSize: 10 },
+  body: [
+    ["Target Retirement Corpus", formatINR(retirementCorpus)],
+    ["Years to Retirement", `${years} years`],
+    ["Assumed Return", "10% p.a."],
+    ["Required Monthly SIP", formatINR(retirementSip)]
+  ]
+});
+
+
+  
   /* ================= DISCLAIMER ================= */
   doc.setFontSize(9);
   doc.text(
