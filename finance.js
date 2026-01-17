@@ -64,7 +64,7 @@ export async function generateClientPlanningPDF(client) {
 
   doc.line(10, 26, 200, 26);
 
-  let currentY = 20;
+  let currentY = 40;
   /* ================= CLIENT SUMMARY ================= */
   doc.setFontSize(13);
   doc.text("Client Summary", 10, 35);
@@ -76,7 +76,7 @@ export async function generateClientPlanningPDF(client) {
     head: [["Field", "Value"]],
     body: [
       ["Name", client.full_name],
-      ["Age", client.age],
+      ["Age", calculateAge(client.date_of_birth)],
       ["Marital Status", client.marital_status],
       ["Dependents", client.dependents],
       ["Monthly Expenses", `₹${client.monthly_expenses.toLocaleString("en-IN")}`],
@@ -138,11 +138,11 @@ export async function generateClientPlanningPDF(client) {
   doc.setFontSize(13);
   doc.text("Retirement Planning", 10, 15);
 
-  const retirementCorpus = calculateRetirementCorpus(
-    client.monthly_expenses,
-    inflationRate,
-    client.retirement_years
-  );
+  // const retirementCorpus = calculateRetirementCorpus(
+  //   client.monthly_expenses,
+  //   inflationRate,
+  //   client.retirement_years
+  // );
 
   doc.autoTable({
     startY: currentY + 5,
