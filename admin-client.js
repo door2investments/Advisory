@@ -2,6 +2,9 @@
  * Admin - Client Dashboard – Token Based
  ************************************/
 
+import { generateClientPlanningPDF } from "./finance.js";
+let clientData =  null;
+
 // Read token from URL
 const params = new URLSearchParams(window.location.search);
 const accessToken = params.get("token");
@@ -47,6 +50,7 @@ async function loadClient() {
     .update({ last_accessed_at: new Date().toISOString() })
     .eq("id", data.id);
 
+  clientData = data;
   renderClient(data);
   // loadAdvisorObservations(data.mobile_number)
 }
@@ -117,3 +121,7 @@ async function loadAdvisorObservations(clientMobile) {
 
 // Init
 loadClient();
+document.getElementById("downloadPdfBtn").addEventListener("click", () => {
+  generateClientPlanningPDF(clientData); // clientData already fetched
+});
+
