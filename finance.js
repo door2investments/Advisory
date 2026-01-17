@@ -149,7 +149,7 @@ export async function generateClientPlanningPDF(client) {
 
   // Assumptions
 const goalReturn = 12; // 12% p.a.
-const inflationRate = 6;
+// const inflationRate = 6;
   
 /* ================= Monthly SIP Required to Achieve Goals ================= */
 
