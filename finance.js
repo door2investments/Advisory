@@ -1,6 +1,6 @@
-const PAGE_HEIGHT = doc.internal.pageSize.getHeight();
-const BOTTOM_MARGIN = 30; // space reserved for disclaimer
-const SECTION_MIN_HEIGHT = 40; // header + few rows
+// const PAGE_HEIGHT = doc.internal.pageSize.getHeight();
+// const BOTTOM_MARGIN = 30; // space reserved for disclaimer
+// const SECTION_MIN_HEIGHT = 40; // header + few rows
 function ensureSpace(doc, currentY, requiredHeight = 40) {
   const pageHeight = doc.internal.pageSize.getHeight();
   const bottomMargin = 30;
