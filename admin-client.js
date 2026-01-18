@@ -118,10 +118,68 @@ async function loadAdvisorObservations(clientMobile) {
   });
 }
 
+function generateAdvisorImpactChartImage() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 600;
+  canvas.height = 400;
+
+  const ctx = canvas.getContext("2d");
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Without Advisor", "With Advisor"],
+      datasets: [{
+        label: "Average Annual Net Return (%)",
+        data: [5, 8], // representative research-based values
+        backgroundColor: ["#e74c3c", "#2ecc71"]
+      }]
+    },
+    options: {
+      responsive: false,
+      animation: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 10,
+          ticks: {
+            callback: v => v + "%"
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: "Impact of Advisor Guidance on Long-Term Returns"
+        }
+      }
+    }
+  });
+
+  // return image data
+  return canvas.toDataURL("image/png");
+}
+
+
 
 // Init
 loadClient();
-document.getElementById("downloadPdfBtn").addEventListener("click", () => {
-  generateClientPlanningPDF(clientData); // clientData already fetched
-});
+
+document
+  .getElementById("downloadPdfBtn")
+  .addEventListener("click", () => {
+    if (!clientData) {
+      alert("Client data not loaded");
+      return;
+    }
+
+    const advisorChartImage = generateAdvisorImpactChartImage();
+
+    generateClientPlanningPDF(clientData, advisorChartImage);
+  });
+
+// document.getElementById("downloadPdfBtn").addEventListener("click", () => {
+//   generateClientPlanningPDF(clientData); // clientData already fetched
+// });
 
