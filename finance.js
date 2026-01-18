@@ -86,7 +86,7 @@ function addMutualFundDisclosureSection(doc) {
         + "Final investment decisions rest solely with the investor."
     }
   ];
-  y = doc.lastAutoTable.finalY + 12;
+  y = y + 12;
   sections.forEach(sec => {
     y = ensureSpace(doc, y, 30);
 
