@@ -496,6 +496,20 @@ function addCoverPage(doc, client) {
     { align: "center" }
   );
 
+  // After "Personal Financial Planning Report"
+  doc.setFontSize(9);
+  doc.setTextColor(107, 114, 128);
+  
+  doc.text(
+    "Prepared by a Mutual Fund Distributor for planning and illustration purposes",
+    pageWidth / 2,
+    135,
+    { align: "center" }
+  );
+  
+  // Reset color for next content
+  doc.setTextColor(0, 0, 0);
+  
   // Footer band
   doc.setFillColor(249, 250, 251);
   doc.rect(0, pageHeight - 50, pageWidth, 50, "F");
