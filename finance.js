@@ -111,7 +111,7 @@ function addMutualFundDisclosureSection(doc) {
 function addDisclaimerFooter(doc) {
   const pageCount = doc.getNumberOfPages();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const pageHeight = doc.internal.pageSize.getHeight();
+  // const pageHeight = doc.internal.pageSize.getHeight();
   const pageWidth = doc.internal.pageSize.getWidth();
 
   doc.setFontSize(9);
