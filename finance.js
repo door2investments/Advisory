@@ -5,12 +5,15 @@ const DISCLAIMER_TEXT =
   "Disclaimer: Calculations are illustrative and based on assumed returns and inflation. "
   + "Mutual fund investments are subject to market risks. Past performance does not guarantee future returns.";
 function addMutualFundDisclosureSection(doc) {
-  doc.addPage();
-  let y = 20;
+  // doc.addPage();
+  let y = doc.lastAutoTable.finalY + 12;
 
   doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
   doc.text("Understanding Mutual Fund Investing With an Advisor", 10, y);
-  y += 10;
+  doc.setFont("helvetica", "normal");
+  y = ensureSpace(doc, y, 10);
+
 
   doc.setFontSize(11);
   const sections = [
@@ -318,7 +321,7 @@ doc.autoTable({
     ]
   });
 
-  const retirementReturn = 10; // conservative
+const retirementReturn = 10; // conservative
 const retirementInflation = 6;
 
 const years = yearsToRetirement(client.date_of_birth);
@@ -345,6 +348,7 @@ doc.text("Monthly SIP Required for Retirement", 10, retirementSipY);
 doc.autoTable({
   startY: retirementSipY + 4,
   theme: "grid",
+  head: [["Parameter", "Value"]],
   styles: { fontSize: 10 },
   body: [
     ["Target Retirement Corpus", formatINR(retirementCorpus)],
