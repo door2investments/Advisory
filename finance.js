@@ -1,6 +1,29 @@
 // const PAGE_HEIGHT = doc.internal.pageSize.getHeight();
 // const BOTTOM_MARGIN = 30; // space reserved for disclaimer
 // const SECTION_MIN_HEIGHT = 40; // header + few rows
+const DISCLAIMER_TEXT =
+  "Disclaimer: Calculations are illustrative and based on assumed returns and inflation. "
+  + "Mutual fund investments are subject to market risks. Past performance does not guarantee future returns.";
+
+function addDisclaimerFooter(doc) {
+  const pageCount = doc.getNumberOfPages();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  doc.setFontSize(9);
+  doc.setTextColor(107, 114, 128);
+
+  for (let i = 2; i <= pageCount; i++) { // ⛔ skip cover page
+    doc.setPage(i);
+
+    doc.text(
+      DISCLAIMER_TEXT,
+      10,
+      pageHeight - 12,
+      { maxWidth: 190 }
+    );
+  }
+}
+
 function ensureSpace(doc, currentY, requiredHeight = 40) {
   const pageHeight = doc.internal.pageSize.getHeight();
   const bottomMargin = 30;
@@ -280,15 +303,16 @@ doc.autoTable({
   /* ================= DISCLAIMER ================= */
   // currentY = doc.lastAutoTable.finalY + 12;
   // currentY = ensureSpace(doc, currentY, 30);
-  doc.setFontSize(9);
-  doc.text(
-    "Disclaimer: Calculations are illustrative and based on assumed inflation and planning norms. "
-    + "Mutual fund investments are subject to market risks. Past performance does not guarantee future returns.",
-    10,
-    280,
-    { maxWidth: 190 }
-  );
+  // doc.setFontSize(9);
+  // doc.text(
+  //   "Disclaimer: Calculations are illustrative and based on assumed inflation and planning norms. "
+  //   + "Mutual fund investments are subject to market risks. Past performance does not guarantee future returns.",
+  //   10,
+  //   280,
+  //   { maxWidth: 190 }
+  // );
 
+  addDisclaimerFooter(doc);
   doc.save(`${client.full_name}_Financial_Plan.pdf`);
 }
 
