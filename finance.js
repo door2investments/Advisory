@@ -4,6 +4,62 @@
 const DISCLAIMER_TEXT =
   "Disclaimer: Calculations are illustrative and based on assumed returns and inflation. "
   + "Mutual fund investments are subject to market risks. Past performance does not guarantee future returns.";
+function addMutualFundDisclosureSection(doc) {
+  doc.addPage();
+  let y = 20;
+
+  doc.setFontSize(14);
+  doc.text("Understanding Mutual Fund Investing With an Advisor", 10, y);
+  y += 10;
+
+  doc.setFontSize(11);
+  const sections = [
+    {
+      title: "How Mutual Fund Investments Are Made",
+      content:
+        "Mutual funds pool money from investors and invest as per scheme objectives. "
+        + "When you invest through a Mutual Fund Distributor, the distributor facilitates "
+        + "scheme selection, execution, and service support. Investments are always held "
+        + "directly in your name with the fund house."
+    },
+    {
+      title: "Role of a SEBI-Registered Mutual Fund Distributor",
+      content:
+        "A Mutual Fund Distributor operates under SEBI regulations and assists investors "
+        + "in goal identification, suitability assessment, execution, and ongoing support."
+    },
+    {
+      title: "Regular Mutual Funds and Transparency",
+      content:
+        "Regular plans include a distribution commission paid by the fund house. "
+        + "There is no separate charge paid by the investor."
+    },
+    {
+      title: "Why Advisor Support Matters",
+      content:
+        "Investor behaviour plays a significant role in long-term outcomes. "
+        + "Guided investing helps avoid emotional decisions and improves discipline."
+    },
+    {
+      title: "Important Disclosures",
+      content:
+        "Mutual fund investments are subject to market risks. Past performance does not "
+        + "guarantee future returns. Returns shown are illustrative."
+    }
+  ];
+
+  sections.forEach(sec => {
+    y = ensureSpace(doc, y, 30);
+
+    doc.setFontSize(12);
+    doc.text(sec.title, 10, y);
+    y += 6;
+
+    doc.setFontSize(10);
+    doc.text(sec.content, 10, y, { maxWidth: 190 });
+    y += 18;
+  });
+}
 
 function addDisclaimerFooter(doc) {
   const pageCount = doc.getNumberOfPages();
@@ -98,7 +154,7 @@ function calculateRetirementCorpus(
   return annualExpense * 25;
 }
 
-export async function generateClientPlanningPDF(client) {
+export async function generateClientPlanningPDF(client,advisorChartImage) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   // 🔹 ADD COVER PAGE
@@ -311,11 +367,33 @@ doc.autoTable({
   //   280,
   //   { maxWidth: 190 }
   // );
-
+  addMutualFundDisclosureSection(doc);
+  // ✅ Add advisor impact chart if available
+  if (advisorChartImage) {
+    addAdvisorImpactChart(doc, advisorChartImage);
+  }
   addDisclaimerFooter(doc);
   doc.save(`${client.full_name}_Financial_Plan.pdf`);
 }
+function addAdvisorImpactChart(doc, chartImage) {
+  doc.addPage();
 
+  doc.setFontSize(14);
+  doc.text("Research Insight: Value of Advisor Guidance", 10, 20);
+
+  doc.addImage(chartImage, "PNG", 15, 30, 180, 100);
+
+  doc.setFontSize(9);
+  doc.setTextColor(107, 114, 128);
+  doc.text(
+    "Source: Industry research (e.g., Vanguard Advisor Alpha). "
+    + "Illustrative comparison showing impact of disciplined, advisor-led investing. "
+    + "Returns are not guaranteed and may vary.",
+    10,
+    140,
+    { maxWidth: 190 }
+  );
+}
 
 function addCoverPage(doc, client) {
   const pageWidth = doc.internal.pageSize.getWidth();
