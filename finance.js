@@ -111,6 +111,8 @@ function addMutualFundDisclosureSection(doc) {
 function addDisclaimerFooter(doc) {
   const pageCount = doc.getNumberOfPages();
   const pageHeight = doc.internal.pageSize.getHeight();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const pageWidth = doc.internal.pageSize.getWidth();
 
   doc.setFontSize(9);
   doc.setTextColor(107, 114, 128);
@@ -118,11 +120,24 @@ function addDisclaimerFooter(doc) {
   for (let i = 2; i <= pageCount; i++) { // ⛔ skip cover page
     doc.setPage(i);
 
+    // Footer line
+    doc.setDrawColor(229, 231, 235);
+    doc.line(10, pageHeight - 22, pageWidth - 10, pageHeight - 22);
+
+    //DISCLAIMER
     doc.text(
       DISCLAIMER_TEXT,
       10,
-      pageHeight - 12,
-      { maxWidth: 190 }
+      pageHeight - 14,
+      { maxWidth: 170 }
+    );
+
+    // Page number (right aligned)
+    doc.text(
+      `Page ${i - 1} of ${pageCount - 1}`,
+      pageWidth - 10,
+      pageHeight - 14,
+      { align: "right" }
     );
   }
 }
