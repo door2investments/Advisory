@@ -8,7 +8,7 @@ const FONT_FAMILY = "helvetica"
 function addMutualFundDisclosureSection(doc) {
   // doc.addPage();
   let y = doc.lastAutoTable.finalY + 12;
-
+  y = ensureSpace(doc, y, 20);
   doc.setFontSize(13);
   doc.setFont(FONT_FAMILY, "bold");
   doc.setTextColor(17, 24, 39);
@@ -440,15 +440,15 @@ doc.autoTable({
   doc.save(`${client.full_name}_Financial_Plan.pdf`);
 }
 function addAdvisorImpactChart(doc, currentY, chartImage) {
-  // doc.addPage();
-  let y = currentY + 6;
+  doc.addPage();
+  // let y = currentY + 6;
 
 
   doc.setFontSize(12);
   doc.setFont(FONT_FAMILY, "bold");
-  doc.text("Research Insight: Value of Advisor Guidance", 10, y);
-  y = y + 3;
-  doc.addImage(chartImage, "PNG", 15, y, 180, 100);
+  doc.text("Research Insight: Value of Advisor Guidance", 10, 20);
+  // y = y + 3;
+  doc.addImage(chartImage, "PNG", 15, 30, 180, 100);
 
   doc.setFontSize(9);
   doc.setFont(FONT_FAMILY, "normal");
@@ -458,7 +458,7 @@ function addAdvisorImpactChart(doc, currentY, chartImage) {
     + "Illustrative comparison showing impact of disciplined, advisor-led investing. "
     + "Returns are not guaranteed and may vary.",
     10,
-    y+104,
+    140,
     { maxWidth: 190 }
   );
 }
