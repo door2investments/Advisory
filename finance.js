@@ -3,15 +3,19 @@
 // const SECTION_MIN_HEIGHT = 40; // header + few rows
 const DISCLAIMER_TEXT =
   "Disclaimer: Calculations are illustrative and based on assumed returns and inflation. "
-  + "Mutual fund investments are subject to market risks. Past performance does not guarantee future returns.";
+  + "Mutual fund investments are subject to market risks, read all scheme-related documents carefully. Past performance does not guarantee future returns.";
+const FONT_FAMILY = "helvetica"
 function addMutualFundDisclosureSection(doc) {
   // doc.addPage();
   let y = doc.lastAutoTable.finalY + 12;
 
-  doc.setFontSize(14);
-  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.setFont("FONT_FAMILY", "bold");
+  doc.setTextColor(17, 24, 39);
   doc.text("Understanding Mutual Fund Investing With an Advisor", 10, y);
-  doc.setFont("helvetica", "normal");
+  doc.setFont("FONT_FAMILY", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(55, 65, 81);
   y = ensureSpace(doc, y, 10);
 
 
@@ -90,13 +94,15 @@ function addMutualFundDisclosureSection(doc) {
   sections.forEach(sec => {
     y = ensureSpace(doc, y, 30);
 
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setFont("FONT_FAMILY", "bold");
+    doc.setTextColor(17, 24, 39);
     doc.text(sec.title, 10, y);
     y += 6;
 
     doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
+    doc.setTextColor(55, 65, 81);
+    doc.setFont("FONT_FAMILY", "normal");
     doc.text(sec.content, 10, y, { maxWidth: 190 });
     y += 18;
   });
