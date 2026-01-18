@@ -1,3 +1,19 @@
+const PAGE_HEIGHT = doc.internal.pageSize.getHeight();
+const BOTTOM_MARGIN = 30; // space reserved for disclaimer
+const SECTION_MIN_HEIGHT = 40; // header + few rows
+function ensureSpace(doc, currentY, requiredHeight = 40) {
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const bottomMargin = 30;
+
+  if (currentY + requiredHeight > pageHeight - bottomMargin) {
+    doc.addPage();
+    return 20; // reset Y for new page
+  }
+
+  return currentY;
+}
+
+
 // Inflation-adjusted future value
 function inflateAmount(amount, inflation, years) {
   return amount * Math.pow(1 + inflation / 100, years);
@@ -100,6 +116,7 @@ export async function generateClientPlanningPDF(client) {
   currentY = doc.lastAutoTable.finalY + 12;
   /* ================= GOALS ================= */
   // doc.addPage();
+  currentY = ensureSpace(doc, currentY, 50);
   doc.setFontSize(13);
   doc.text("Goal Planning (Inflation Adjusted)", 10, currentY);
 
@@ -173,7 +190,8 @@ const goalReturn = 12; // 12% p.a.
     ];
   });
 
-let sipStartY = doc.lastAutoTable.finalY + 8;
+let sipStartY = ensureSpace(doc, currentY, 50);//doc.lastAutoTable.finalY + 8;
+  sipStartY = ensureSpace(doc, sipStartY, 50);
 
 doc.setFontSize(12);
 doc.text("Monthly SIP Required to Achieve Goals", 10, sipStartY);
@@ -190,6 +208,7 @@ doc.autoTable({
 
   /* ================= RETIREMENT ================= */
   // doc.addPage();
+  currentY = ensureSpace(doc, currentY, 50);
   doc.setFontSize(13);
   doc.text("Retirement Planning", 10, currentY);
 
@@ -239,6 +258,7 @@ const retirementSip = calculateSipRequired(
 );
 
 let retirementSipY = doc.lastAutoTable.finalY + 8;
+retirementSipY = ensureSpace(doc, retirementSipY, 50);
 
 doc.setFontSize(12);
 doc.text("Monthly SIP Required for Retirement", 10, retirementSipY);
@@ -258,6 +278,8 @@ doc.autoTable({
 
   
   /* ================= DISCLAIMER ================= */
+  currentY = doc.lastAutoTable.finalY + 12;
+  currentY = ensureSpace(doc, currentY, 30);
   doc.setFontSize(9);
   doc.text(
     "Disclaimer: Calculations are illustrative and based on assumed inflation and planning norms. "
