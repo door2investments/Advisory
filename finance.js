@@ -106,6 +106,7 @@ function addMutualFundDisclosureSection(doc) {
     doc.text(sec.content, 10, y, { maxWidth: 190 });
     y += 18;
   });
+  return y;
 }
 
 function addDisclaimerFooter(doc) {
@@ -430,17 +431,17 @@ doc.autoTable({
   //   280,
   //   { maxWidth: 190 }
   // );
-  addMutualFundDisclosureSection(doc);
+  currentY = addMutualFundDisclosureSection(doc);
   // ✅ Add advisor impact chart if available
   if (advisorChartImage) {
-    addAdvisorImpactChart(doc, advisorChartImage);
+    addAdvisorImpactChart(doc, currentY, advisorChartImage);
   }
   addDisclaimerFooter(doc);
   doc.save(`${client.full_name}_Financial_Plan.pdf`);
 }
-function addAdvisorImpactChart(doc, chartImage) {
+function addAdvisorImpactChart(doc, currentY, chartImage) {
   // doc.addPage();
-  let y = doc.lastAutoTable.finalY + 12;
+  let y = currentY + 12;
 
 
   doc.setFontSize(14);
@@ -524,7 +525,7 @@ function addCoverPage(doc, client) {
   doc.text(
     "Prepared by a Mutual Fund Distributor for planning and illustration purposes",
     pageWidth / 2,
-    135,
+    140,
     { align: "center" }
   );
   
@@ -547,7 +548,7 @@ function addCoverPage(doc, client) {
 
   doc.setFontSize(10);
   doc.text(
-    "Phone: 9390250541  |  WhatsApp Available",
+    "Phone: 9390250541  |  WhatsApp Available | ARN-348767",
     pageWidth / 2,
     pageHeight - 22,
     { align: "center" }
