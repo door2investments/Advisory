@@ -90,7 +90,7 @@
     </section>
     <button id="downloadPdfBtn">Download Financial Plan (PDF)</button>
   </main>
-  
+  <canvas id="advisorImpactChart" width="600" height="400" style="display:none;"></canvas>
   <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <!-- jsPDF libs -->
@@ -98,6 +98,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 <!-- Your admin client view -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module" src="admin-client.js"></script>
 </body>
 </html>
