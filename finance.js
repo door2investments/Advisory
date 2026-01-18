@@ -238,7 +238,7 @@ export async function generateClientPlanningPDF(client,advisorChartImage) {
   // doc.addPage();
   currentY = ensureSpace(doc, currentY, 50);
   doc.setFontSize(13);
-  doc.text("Goal Planning (Inflation Adjusted)", 10, currentY);
+  doc.text("Goal Planning (Inflation(6%) Adjusted)", 10, currentY);
 
   const goals = [
     {
@@ -314,7 +314,7 @@ let sipStartY = doc.lastAutoTable.finalY + 12;
   sipStartY = ensureSpace(doc, sipStartY, 50);
 
 doc.setFontSize(12);
-doc.text("Monthly SIP Required to Achieve Goals", 10, sipStartY);
+doc.text("Monthly SIP Required to Achieve Goals (12% Returns Assumed)", 10, sipStartY);
 
 doc.autoTable({
   startY: sipStartY + 4,
@@ -345,7 +345,7 @@ doc.autoTable({
     head: [["Parameter", "Value"]],
     body: [
       ["Current Age", calculateAge(client.date_of_birth)],
-      ["Retirement Age", 60],
+      ["Retirement Age", "60 (Assumed)"],
       ["Years to Retirement", yearsToRetirement(client.date_of_birth)],
       ["Required Retirement Corpus",
         `RS. ${Math.round(
