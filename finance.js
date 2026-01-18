@@ -441,13 +441,13 @@ doc.autoTable({
 }
 function addAdvisorImpactChart(doc, currentY, chartImage) {
   // doc.addPage();
-  let y = currentY + 12;
+  let y = currentY + 6;
 
 
   doc.setFontSize(14);
   doc.text("Research Insight: Value of Advisor Guidance", 10, y);
 
-  doc.addImage(chartImage, "PNG", 15, 30, 180, 100);
+  doc.addImage(chartImage, "PNG", 15, y+6, 180, 100);
 
   doc.setFontSize(9);
   doc.setTextColor(107, 114, 128);
