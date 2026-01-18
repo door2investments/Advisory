@@ -44,21 +44,59 @@ function addMutualFundDisclosureSection(doc) {
         + "Guided investing helps avoid emotional decisions and improves discipline."
     },
     {
+      title: "Nature of Engagement",
+      content:
+        "This engagement is provided in the capacity of a Mutual Fund Distributor (MFD). "
+        + "The role of the distributor is limited to facilitating suitable mutual fund investments, "
+        + "execution support, and ongoing service assistance. "
+        + "Investment decisions are taken by the client based on understanding and consent."
+    },
+    {
+      title: "Direct and Regular Mutual Fund Plans",
+      content:
+        "Mutual fund schemes are available in both Direct and Regular plans. "
+        + "In Regular plans, the fund house pays a distribution commission to the distributor "
+        + "for service and ongoing support. "
+        + "This commission is included in the scheme expense ratio and disclosed by the fund house. "
+        + "The choice of plan is made with full transparency and investor understanding."
+    },
+    {
+      title: "Assumptions Used in Calculations",
+      content:
+        "The projections and SIP calculations in this report are illustrative in nature and "
+        + "based on assumed rates of return, inflation, and investment tenure for planning purposes. "
+        + "Actual returns may differ significantly due to market conditions, fund performance, "
+        + "and investor behavior."
+    },
+    {
+      title: "Impact of Investor Behaviour",
+      content:
+        "Investor behavior plays a critical role in long-term investment outcomes. "
+        + "Emotional decisions such as panic selling during market volatility or inconsistent investing "
+        + "can materially impact results. Advisory support aims to help investors maintain discipline "
+        + "aligned with long-term financial goals."
+    },
+    {
       title: "Important Disclosures",
       content:
-        "Mutual fund investments are subject to market risks. Past performance does not "
-        + "guarantee future returns. Returns shown are illustrative."
+        "Mutual fund investments are subject to market risks. "
+        + "Past performance does not guarantee future returns. "
+        + "Investments are held directly in the investor’s name with respective fund houses. "
+        + "The distributor does not handle or control investor funds. "
+        + "Final investment decisions rest solely with the investor."
     }
   ];
-
+  y = doc.lastAutoTable.finalY + 12;
   sections.forEach(sec => {
     y = ensureSpace(doc, y, 30);
 
     doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
     doc.text(sec.title, 10, y);
     y += 6;
 
     doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
     doc.text(sec.content, 10, y, { maxWidth: 190 });
     y += 18;
   });
@@ -172,7 +210,7 @@ export async function generateClientPlanningPDF(client,advisorChartImage) {
   doc.text("Wealth & Investment Advisory Services", 105, 15, { align: "center" });
 
   doc.setFontSize(10);
-  doc.text("Raviteja Soma | 📞 9390250541", 105, 22, { align: "center" });
+  doc.text("Raviteja Soma | Phone: 9390250541 | ARN-348767", 105, 22, { align: "center" });
 
   doc.line(10, 26, 200, 26);
 
@@ -272,7 +310,7 @@ const goalReturn = 12; // 12% p.a.
     ];
   });
 
-let sipStartY = doc.lastAutoTable.finalY + 8;
+let sipStartY = doc.lastAutoTable.finalY + 12;
   sipStartY = ensureSpace(doc, sipStartY, 50);
 
 doc.setFontSize(12);
@@ -339,7 +377,7 @@ const retirementSip = calculateSipRequired(
   years
 );
 
-let retirementSipY = doc.lastAutoTable.finalY + 8;
+let retirementSipY = doc.lastAutoTable.finalY + 12;
 retirementSipY = ensureSpace(doc, retirementSipY, 50);
 
 doc.setFontSize(12);
