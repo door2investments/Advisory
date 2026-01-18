@@ -418,10 +418,12 @@ doc.autoTable({
   doc.save(`${client.full_name}_Financial_Plan.pdf`);
 }
 function addAdvisorImpactChart(doc, chartImage) {
-  doc.addPage();
+  // doc.addPage();
+  let y = doc.lastAutoTable.finalY + 12;
+
 
   doc.setFontSize(14);
-  doc.text("Research Insight: Value of Advisor Guidance", 10, 20);
+  doc.text("Research Insight: Value of Advisor Guidance", 10, y);
 
   doc.addImage(chartImage, "PNG", 15, 30, 180, 100);
 
@@ -510,7 +512,7 @@ function addCoverPage(doc, client) {
 
   doc.setFontSize(10);
   doc.text(
-    "📞 9390250541  |  WhatsApp Available",
+    "Phone: 9390250541  |  WhatsApp Available",
     pageWidth / 2,
     pageHeight - 22,
     { align: "center" }
