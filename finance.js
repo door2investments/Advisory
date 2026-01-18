@@ -446,8 +446,8 @@ function addAdvisorImpactChart(doc, currentY, chartImage) {
 
   doc.setFontSize(14);
   doc.text("Research Insight: Value of Advisor Guidance", 10, y);
-
-  doc.addImage(chartImage, "PNG", 15, y+6, 180, 100);
+  y = y + 5;
+  doc.addImage(chartImage, "PNG", 15, y, 180, 100);
 
   doc.setFontSize(9);
   doc.setTextColor(107, 114, 128);
@@ -456,7 +456,7 @@ function addAdvisorImpactChart(doc, currentY, chartImage) {
     + "Illustrative comparison showing impact of disciplined, advisor-led investing. "
     + "Returns are not guaranteed and may vary.",
     10,
-    140,
+    y+100,
     { maxWidth: 190 }
   );
 }
