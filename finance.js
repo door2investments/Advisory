@@ -10,10 +10,10 @@ function addMutualFundDisclosureSection(doc) {
   let y = doc.lastAutoTable.finalY + 12;
 
   doc.setFontSize(13);
-  doc.setFont("FONT_FAMILY", "bold");
+  doc.setFont(FONT_FAMILY, "bold");
   doc.setTextColor(17, 24, 39);
   doc.text("Understanding Mutual Fund Investing With an Advisor", 10, y);
-  doc.setFont("FONT_FAMILY", "normal");
+  doc.setFont(FONT_FAMILY, "normal");
   doc.setFontSize(10);
   doc.setTextColor(55, 65, 81);
   y = ensureSpace(doc, y, 10);
@@ -95,14 +95,14 @@ function addMutualFundDisclosureSection(doc) {
     y = ensureSpace(doc, y, 30);
 
     doc.setFontSize(13);
-    doc.setFont("FONT_FAMILY", "bold");
+    doc.setFont(FONT_FAMILY, "bold");
     doc.setTextColor(17, 24, 39);
     doc.text(sec.title, 10, y);
     y += 6;
 
     doc.setFontSize(10);
     doc.setTextColor(55, 65, 81);
-    doc.setFont("FONT_FAMILY", "normal");
+    doc.setFont(FONT_FAMILY, "normal");
     doc.text(sec.content, 10, y, { maxWidth: 190 });
     y += 18;
   });
