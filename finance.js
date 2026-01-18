@@ -190,7 +190,7 @@ const goalReturn = 12; // 12% p.a.
     ];
   });
 
-let sipStartY = ensureSpace(doc, currentY, 50);//doc.lastAutoTable.finalY + 8;
+let sipStartY = doc.lastAutoTable.finalY + 8;
   sipStartY = ensureSpace(doc, sipStartY, 50);
 
 doc.setFontSize(12);
@@ -278,8 +278,8 @@ doc.autoTable({
 
   
   /* ================= DISCLAIMER ================= */
-  currentY = doc.lastAutoTable.finalY + 12;
-  currentY = ensureSpace(doc, currentY, 30);
+  // currentY = doc.lastAutoTable.finalY + 12;
+  // currentY = ensureSpace(doc, currentY, 30);
   doc.setFontSize(9);
   doc.text(
     "Disclaimer: Calculations are illustrative and based on assumed inflation and planning norms. "
