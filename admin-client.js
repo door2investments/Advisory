@@ -179,6 +179,19 @@ document
     generateClientPlanningPDF(clientData, advisorChartImage);
   });
 
+document
+  .getElementById("downloadPdfBtnStepup")
+  .addEventListener("click", () => {
+    if (!clientData) {
+      alert("Client data not loaded");
+      return;
+    }
+
+    const advisorChartImage = generateAdvisorImpactChartImage();
+
+    generateClientPlanningPDF(clientData, advisorChartImage,true);
+  });
+
 // document.getElementById("downloadPdfBtn").addEventListener("click", () => {
 //   generateClientPlanningPDF(clientData); // clientData already fetched
 // });
