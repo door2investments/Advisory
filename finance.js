@@ -354,7 +354,7 @@ if (SHOW_STEP_UP_SIP) {
   currentY = addGoalStepUpSipTable(doc, currentY, goals);
 
   // Retirement
-  currentY = addRetirementStepUpSipTable(doc, currentY, client);
+  // currentY = addRetirementStepUpSipTable(doc, currentY, client);
 }
 
   
