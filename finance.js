@@ -218,7 +218,7 @@ function calculateRetirementCorpus(
   return annualExpense * 25;
 }
 
-export async function generateClientPlanningPDF(client,advisorChartImage,SHOW_STEP_UP_SIP=false) {
+export async function generateClientPlanningPDF(client,advisorChartImage) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   // 🔹 ADD COVER PAGE
@@ -349,13 +349,13 @@ doc.autoTable({
   
   currentY = doc.lastAutoTable.finalY + 12;
 
-if (SHOW_STEP_UP_SIP) {
-  // Goals
-  currentY = addGoalStepUpSipTable(doc, currentY, goals);
+// if (SHOW_STEP_UP_SIP) {
+//   // Goals
+//   currentY = addGoalStepUpSipTable(doc, currentY, goals);
 
-  // Retirement
-  // currentY = addRetirementStepUpSipTable(doc, currentY, client);
-}
+//   // Retirement
+//   // currentY = addRetirementStepUpSipTable(doc, currentY, client);
+// }
 
   
   /* ================= RETIREMENT ================= */
@@ -428,10 +428,10 @@ doc.autoTable({
   ]
 });
 
-if (SHOW_STEP_UP_SIP) {
-  // Retirement
-  currentY = addRetirementStepUpSipTable(doc, currentY, client);
-}
+// if (SHOW_STEP_UP_SIP) {
+//   // Retirement
+//   currentY = addRetirementStepUpSipTable(doc, currentY, client);
+// }
 
   
   /* ================= DISCLAIMER ================= */
