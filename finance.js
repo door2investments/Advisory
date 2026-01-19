@@ -4,7 +4,8 @@
 const DISCLAIMER_TEXT =
   "Disclaimer: Calculations are illustrative and based on assumed returns and inflation. "
   + "Mutual fund investments are subject to market risks, read all scheme-related documents carefully. Past performance does not guarantee future returns.";
-const FONT_FAMILY = "helvetica"
+const FONT_FAMILY = "helvetica";
+// const SHOW_STEP_UP_SIP = true;
 function addMutualFundDisclosureSection(doc) {
   // doc.addPage();
   let y = doc.lastAutoTable.finalY + 12;
@@ -217,7 +218,7 @@ function calculateRetirementCorpus(
   return annualExpense * 25;
 }
 
-export async function generateClientPlanningPDF(client,advisorChartImage) {
+export async function generateClientPlanningPDF(client,advisorChartImage,SHOW_STEP_UP_SIP=false) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   // 🔹 ADD COVER PAGE
@@ -345,9 +346,18 @@ doc.autoTable({
   head: [["Goal", "Horizon", "Target Amount", "Required SIP"]],
   body: sipRows
 });
-
+  
   currentY = doc.lastAutoTable.finalY + 12;
 
+if (SHOW_STEP_UP_SIP) {
+  // Goals
+  currentY = addGoalStepUpSipTable(doc, currentY, goals);
+
+  // Retirement
+  currentY = addRetirementStepUpSipTable(doc, currentY, client);
+}
+
+  
   /* ================= RETIREMENT ================= */
   // doc.addPage();
   currentY = ensureSpace(doc, currentY, 50);
@@ -418,6 +428,10 @@ doc.autoTable({
   ]
 });
 
+if (SHOW_STEP_UP_SIP) {
+  // Retirement
+  currentY = addRetirementStepUpSipTable(doc, currentY, client);
+}
 
   
   /* ================= DISCLAIMER ================= */
@@ -566,3 +580,132 @@ function addCoverPage(doc, client) {
     { align: "center" }
   );
 }
+
+function calculateStepUpSipRequired(
+  futureValue,
+  annualReturn,
+  years,
+  stepUpRate = 10
+) {
+  const r = Math.pow(1 + annualReturn / 100, 1 / 12) - 1;
+  const g = stepUpRate / 100;
+  const months = years * 12;
+
+  let low = 0;
+  let high = futureValue;
+  let mid;
+
+  for (let i = 0; i < 60; i++) { // binary search iterations
+    mid = (low + high) / 2;
+
+    let accumulated = 0;
+    for (let y = 0; y < years; y++) {
+      const yearlySip = mid * Math.pow(1 + g, y);
+      const remainingMonths = (years - y) * 12;
+
+      const fvYear =
+        yearlySip *
+        ((Math.pow(1 + r, remainingMonths) - 1) / r);
+
+      accumulated += fvYear;
+    }
+
+    if (accumulated > futureValue) {
+      high = mid;
+    } else {
+      low = mid;
+    }
+  }
+
+  return mid;
+}
+
+function addGoalStepUpSipTable(doc, currentY, goals) {
+  const inflationRate = 6;
+  const returnRate = 12;
+  const stepUpRate = 10;
+
+  const rows = goals
+    .filter(g => g.amount > 0)
+    .map(g => {
+      const inflated =
+        g.amount * Math.pow(1 + inflationRate / 100, g.years);
+
+      const stepUpSip = calculateStepUpSipRequired(
+        inflated,
+        returnRate,
+        g.years,
+        stepUpRate
+      );
+
+      return [
+        g.name,
+        `${g.years} years`,
+        formatINR(inflated),
+        formatINR(stepUpSip)
+      ];
+    });
+
+  currentY = ensureSpace(doc, currentY, 60);
+
+  // Heading
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("Step-Up SIP Required for Goals (10% Annual Increase)", 10, currentY);
+  doc.setFont("helvetica", "normal");
+
+  doc.autoTable({
+    startY: currentY + 5,
+    theme: "grid",
+    styles: { fontSize: 10 },
+    head: [["Goal", "Horizon", "Target Amount", "Starting Monthly SIP"]],
+    body: rows
+  });
+
+  return doc.lastAutoTable.finalY + 12;
+}
+
+function addRetirementStepUpSipTable(doc, currentY, client) {
+  const inflationRate = 6;
+  const returnRate = 10;
+  const stepUpRate = 10;
+
+  const years = yearsToRetirement(client.date_of_birth);
+
+  const retirementCorpus =
+    calculateRetirementCorpus(
+      client.monthly_expenses,
+      inflationRate,
+      client.date_of_birth
+    );
+
+  const stepUpSip = calculateStepUpSipRequired(
+    retirementCorpus,
+    returnRate,
+    years,
+    stepUpRate
+  );
+
+  currentY = ensureSpace(doc, currentY, 60);
+
+  // Heading
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("Step-Up SIP Required for Retirement (10% Annual Increase)", 10, currentY);
+  doc.setFont("helvetica", "normal");
+
+  doc.autoTable({
+    startY: currentY + 5,
+    theme: "grid",
+    styles: { fontSize: 10 },
+    body: [
+      ["Target Retirement Corpus", formatINR(retirementCorpus)],
+      ["Years to Retirement", `${years} years`],
+      ["Annual Step-Up Assumed", "10%"],
+      ["Starting Monthly SIP", formatINR(stepUpSip)]
+    ]
+  });
+
+  return doc.lastAutoTable.finalY + 12;
+}
+
