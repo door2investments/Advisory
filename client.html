@@ -63,6 +63,24 @@
       </div>
     </div>
 
+    <!-- Goal Plan -->
+    <div class="card" id="goalPlanCard" hidden>
+      <h3>Your Goal Plan</h3>
+      <p class="card-sub">
+        Each goal amount is shown in today's cost and in what it is expected to
+        cost by the time you need it, along with the monthly investment required.
+      </p>
+
+      <div id="goalPlanList"></div>
+
+      <div class="goal-plan-total" id="goalPlanTotal"></div>
+
+      <p class="goal-plan-basis">
+        Figures are illustrative and based on the return and inflation assumptions
+        shown for each goal. Mutual fund investments are subject to market risks.
+      </p>
+    </div>
+
     <!-- Insurance -->
     <div class="card">
       <h3>Insurance Status</h3>
@@ -140,7 +158,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <!-- App JS -->
-<script src="client.js"></script>
+<script type="module" src="client.js"></script>
 
 </body>
 </html>

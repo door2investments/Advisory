@@ -1,3 +1,9 @@
+import {
+  planGoals,
+  sipRequired,
+  formatCurrencyPlain
+} from "./goal-planner.js";
+
 // const PAGE_HEIGHT = doc.internal.pageSize.getHeight();
 // const BOTTOM_MARGIN = 30; // space reserved for disclaimer
 // const SECTION_MIN_HEIGHT = 40; // header + few rows
@@ -162,15 +168,6 @@ function inflateAmount(amount, inflation, years) {
   return amount * Math.pow(1 + inflation / 100, years);
 }
 
-function calculateSipRequired(futureValue, annualReturn, years) {
-  const n = years * 12;
-  const r = Math.pow(1 + annualReturn / 100, 1 / 12) - 1;
-
-  if (r === 0) return futureValue / n;
-
-  return futureValue * r / (Math.pow(1 + r, n) - 1);
-}
-
 function formatINR(amount) {
   return `Rs. ${Math.round(amount).toLocaleString("en-IN")}`;
 }
@@ -218,7 +215,160 @@ function calculateRetirementCorpus(
   return annualExpense * 25;
 }
 
-export async function generateClientPlanningPDF(client,advisorChartImage) {
+/**
+ * Goal planning section, driven entirely by the client_goals
+ * rows the advisor saved. Prints two tables — what each goal
+ * will cost, and what it takes to fund it — plus an
+ * affordability line against the client's monthly savings.
+ *
+ * Returns the Y position to continue from.
+ */
+function addGoalPlanningSection(doc, startY, goals, client) {
+  let y = ensureSpace(doc, startY, 60);
+
+  doc.setFontSize(13);
+  doc.setFont(FONT_FAMILY, "bold");
+  doc.setTextColor(17, 24, 39);
+  doc.text("Goal Planning", 10, y);
+  doc.setFont(FONT_FAMILY, "normal");
+
+  if (!goals || goals.length === 0) {
+    doc.setFontSize(10);
+    doc.setTextColor(55, 65, 81);
+    doc.text(
+      "No goals have been recorded for this client yet.",
+      10,
+      y + 8,
+      { maxWidth: 190 }
+    );
+    return y + 18;
+  }
+
+  const { rows, totals } = planGoals(goals, client.monthly_savings);
+
+  /* ---------- What each goal will cost ---------- */
+  doc.autoTable({
+    startY: y + 5,
+    theme: "grid",
+    styles: { fontSize: 9 },
+    headStyles: { fillColor: [15, 42, 68] },
+    head: [[
+      "Goal",
+      "Horizon",
+      "Amount (today)",
+      "Inflation",
+      "Target on goal date",
+      "Already saved",
+      "Shortfall"
+    ]],
+    body: rows.map(row => [
+      row.goal_name || "-",
+      `${row.years} years`,
+      formatCurrencyPlain(row.amountToday),
+      `${row.inflationPct}% p.a.`,
+      formatCurrencyPlain(row.targetAmount),
+      formatCurrencyPlain(row.existingCorpus),
+      row.fullyFunded ? "Fully funded" : formatCurrencyPlain(row.shortfall)
+    ]),
+    foot: [[
+      "Total",
+      "",
+      "",
+      "",
+      formatCurrencyPlain(totals.targetAmount),
+      formatCurrencyPlain(totals.existingCorpus),
+      formatCurrencyPlain(totals.shortfall)
+    ]],
+    footStyles: { fillColor: [241, 245, 249], textColor: [17, 24, 39], fontStyle: "bold" }
+  });
+
+  /* ---------- What it takes to fund them ---------- */
+  y = ensureSpace(doc, doc.lastAutoTable.finalY + 12, 60);
+
+  doc.setFontSize(12);
+  doc.setFont(FONT_FAMILY, "bold");
+  doc.text("Investment Required to Achieve Goals", 10, y);
+  doc.setFont(FONT_FAMILY, "normal");
+
+  doc.autoTable({
+    startY: y + 5,
+    theme: "grid",
+    styles: { fontSize: 9 },
+    headStyles: { fillColor: [15, 42, 68] },
+    head: [[
+      "Goal",
+      "Horizon",
+      "Return assumed",
+      "Monthly SIP",
+      "Step-up SIP (start)",
+      "Step-up rate",
+      "Lumpsum today"
+    ]],
+    body: rows.map(row => [
+      row.goal_name || "-",
+      `${row.years} years`,
+      `${row.returnPct}% p.a.`,
+      formatCurrencyPlain(row.monthlySip),
+      formatCurrencyPlain(row.stepUpSip),
+      row.stepUpPct > 0 ? `${row.stepUpPct}% p.a.` : "-",
+      formatCurrencyPlain(row.lumpsumToday)
+    ]),
+    foot: [[
+      "Total",
+      "",
+      "",
+      formatCurrencyPlain(totals.monthlySip),
+      formatCurrencyPlain(totals.stepUpSip),
+      "",
+      formatCurrencyPlain(totals.lumpsumToday)
+    ]],
+    footStyles: { fillColor: [241, 245, 249], textColor: [17, 24, 39], fontStyle: "bold" }
+  });
+
+  y = doc.lastAutoTable.finalY + 10;
+
+  /* ---------- Affordability ---------- */
+  if (totals.monthlySavings !== undefined) {
+    y = ensureSpace(doc, y, 24);
+    doc.setFontSize(9);
+    doc.setTextColor(55, 65, 81);
+
+    const line = totals.affordable
+      ? `The total monthly SIP of ${formatCurrencyPlain(totals.monthlySip)} uses about `
+        + `${Math.round(totals.savingsUtilisationPct)}% of current monthly savings of `
+        + `${formatCurrencyPlain(totals.monthlySavings)}, leaving `
+        + `${formatCurrencyPlain(totals.surplus)} unallocated.`
+      : `The total monthly SIP of ${formatCurrencyPlain(totals.monthlySip)} exceeds current `
+        + `monthly savings of ${formatCurrencyPlain(totals.monthlySavings)} by `
+        + `${formatCurrencyPlain(Math.abs(totals.surplus))}. Starting with the step-up route at `
+        + `${formatCurrencyPlain(totals.stepUpSip)} per month, extending the horizon, or `
+        + `revising goal amounts would bring the plan within reach.`;
+
+    doc.text(line, 10, y, { maxWidth: 190 });
+    y += 14;
+  }
+
+  /* ---------- Basis of calculation ---------- */
+  y = ensureSpace(doc, y, 24);
+  doc.setFontSize(8);
+  doc.setTextColor(107, 114, 128);
+  doc.text(
+    "Basis: goal amounts are stated in today's money and inflated to the goal date at the "
+    + "inflation rate shown for each goal. SIP instalments are assumed to be invested at the "
+    + "start of each month and to grow at the return shown for that goal. Any amount already "
+    + "earmarked for a goal is grown at the same return and deducted, so the SIP funds only the "
+    + "remaining shortfall. Step-up SIP starts at the amount shown and increases every year at "
+    + "the step-up rate. Rates are planning assumptions, not guarantees.",
+    10,
+    y,
+    { maxWidth: 190 }
+  );
+  doc.setTextColor(0, 0, 0);
+
+  return y + 22;
+}
+
+export async function generateClientPlanningPDF(client, advisorChartImage, goals = []) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   // 🔹 ADD COVER PAGE
@@ -226,7 +376,6 @@ export async function generateClientPlanningPDF(client,advisorChartImage) {
 
   // 🔹 MOVE TO NEXT PAGE
   doc.addPage();
-  const inflationRate = 6;
 
   /* ================= HEADER ================= */
   doc.setFontSize(16);
@@ -252,112 +401,14 @@ export async function generateClientPlanningPDF(client,advisorChartImage) {
       ["Age", calculateAge(client.date_of_birth)],
       ["Marital Status", client.marital_status],
       ["Dependents", client.dependents],
-      ["Monthly Expenses", `RS. ${client.monthly_expenses.toLocaleString("en-IN")}`],
-      ["Monthly Savings", `RS. ${client.monthly_savings.toLocaleString("en-IN")}`]
+      ["Monthly Expenses", `Rs. ${client.monthly_expenses.toLocaleString("en-IN")}`],
+      ["Monthly Savings", `Rs. ${client.monthly_savings.toLocaleString("en-IN")}`]
     ]
   });
   currentY = doc.lastAutoTable.finalY + 12;
-  /* ================= GOALS ================= */
-  // doc.addPage();
-  currentY = ensureSpace(doc, currentY, 50);
-  doc.setFontSize(13);
-  doc.text("Goal Planning (Inflation(6%) Adjusted)", 10, currentY);
+  /* ================= GOAL PLANNING ================= */
+  currentY = addGoalPlanningSection(doc, currentY, goals, client);
 
-  const goals = [
-    {
-      name: "Short Term Goal",
-      description: client.short_term_goal,
-      amount: client.short_term_amount,
-      years: 3
-    },
-    {
-      name: "Medium Term Goal",
-      description: client.medium_term_goal,
-      amount: client.medium_term_amount,
-      years: 7
-    },
-    {
-      name: "Long Term Goal",
-      description: client.long_term_goal,
-      amount: client.long_term_amount,
-      years: 15
-    }
-  ];
-
-  const goalRows = goals
-    .filter(g => g.amount > 0)
-    .map(g => {
-      const inflated = inflateAmount(g.amount, inflationRate, g.years);
-      return [
-        g.name,
-        g.description || "-",
-        `${g.years} years`,
-        `RS. ${g.amount.toLocaleString("en-IN")}`,
-        `RS. ${Math.round(inflated).toLocaleString("en-IN")}`
-      ];
-    });
-
-  doc.autoTable({
-    startY: currentY + 5,
-    theme: "grid",
-    styles: { fontSize: 10 },
-    head: [
-      ["Goal", "Description", "Time Horizon", "Today's Amount", "Required Amount"]
-    ],
-    body: goalRows
-  });
-
-  // Assumptions
-const goalReturn = 12; // 12% p.a.
-// const inflationRate = 6;
-  
-/* ================= Monthly SIP Required to Achieve Goals ================= */
-
-  const sipRows = goals
-  .filter(g => g.amount > 0)
-  .map(g => {
-    const inflatedAmount =
-      g.amount * Math.pow(1 + inflationRate / 100, g.years);
-
-    const sip = calculateSipRequired(
-      inflatedAmount,
-      goalReturn,
-      g.years
-    );
-
-    return [
-      g.name,
-      `${g.years} years`,
-      formatINR(inflatedAmount),
-      formatINR(sip)
-    ];
-  });
-
-let sipStartY = doc.lastAutoTable.finalY + 12;
-  sipStartY = ensureSpace(doc, sipStartY, 50);
-
-doc.setFontSize(12);
-doc.text("Monthly SIP Required to Achieve Goals (12% Returns Assumed)", 10, sipStartY);
-
-doc.autoTable({
-  startY: sipStartY + 4,
-  theme: "grid",
-  styles: { fontSize: 10 },
-  head: [["Goal", "Horizon", "Target Amount", "Required SIP"]],
-  body: sipRows
-});
-  
-  currentY = doc.lastAutoTable.finalY + 12;
-
-// if (SHOW_STEP_UP_SIP) {
-//   // Goals
-//   currentY = addGoalStepUpSipTable(doc, currentY, goals);
-
-//   // Retirement
-//   // currentY = addRetirementStepUpSipTable(doc, currentY, client);
-// }
-
-  
   /* ================= RETIREMENT ================= */
   // doc.addPage();
   currentY = ensureSpace(doc, currentY, 50);
@@ -380,7 +431,7 @@ doc.autoTable({
       ["Retirement Age", "60 (Assumed)"],
       ["Years to Retirement", yearsToRetirement(client.date_of_birth)],
       ["Required Retirement Corpus",
-        `RS. ${Math.round(
+        `Rs. ${Math.round(
           calculateRetirementCorpus(
             client.monthly_expenses,
             6,
@@ -403,7 +454,7 @@ const retirementCorpus =
     client.date_of_birth
   );
 
-const retirementSip = calculateSipRequired(
+const retirementSip = sipRequired(
   retirementCorpus,
   retirementReturn,
   years
@@ -618,51 +669,6 @@ function calculateStepUpSipRequired(
   }
 
   return mid;
-}
-
-function addGoalStepUpSipTable(doc, currentY, goals) {
-  const inflationRate = 6;
-  const returnRate = 12;
-  const stepUpRate = 10;
-
-  const rows = goals
-    .filter(g => g.amount > 0)
-    .map(g => {
-      const inflated =
-        g.amount * Math.pow(1 + inflationRate / 100, g.years);
-
-      const stepUpSip = calculateStepUpSipRequired(
-        inflated,
-        returnRate,
-        g.years,
-        stepUpRate
-      );
-
-      return [
-        g.name,
-        `${g.years} years`,
-        formatINR(inflated),
-        formatINR(stepUpSip)
-      ];
-    });
-
-  currentY = ensureSpace(doc, currentY, 60);
-
-  // Heading
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Step-Up SIP Required for Goals (10% Annual Increase)", 10, currentY);
-  doc.setFont("helvetica", "normal");
-
-  doc.autoTable({
-    startY: currentY + 5,
-    theme: "grid",
-    styles: { fontSize: 10 },
-    head: [["Goal", "Horizon", "Target Amount", "Starting Monthly SIP"]],
-    body: rows
-  });
-
-  return doc.lastAutoTable.finalY + 12;
 }
 
 function addRetirementStepUpSipTable(doc, currentY, client) {

@@ -2,6 +2,8 @@
  * Client Dashboard – Token Based
  ************************************/
 
+import { planGoals, formatCurrency as fmtGoal } from "./goal-planner.js";
+
 // Read token from URL
 const params = new URLSearchParams(window.location.search);
 const accessToken = params.get("token");
@@ -49,6 +51,120 @@ async function loadClient() {
 
   renderClient(data);
   loadAdvisorObservations(data.mobile_number)
+  loadGoalPlan(data);
+}
+
+/************************************
+ * GOAL PLAN (read-only)
+ *
+ * Goals are created by the advisor in the admin view; the client
+ * only ever sees the resulting plan.
+ ************************************/
+async function loadGoalPlan(client) {
+  const card = document.getElementById("goalPlanCard");
+  const list = document.getElementById("goalPlanList");
+  const totalEl = document.getElementById("goalPlanTotal");
+
+  const { data, error } = await supabaseClient
+    .from("client_goals")
+    .select("*")
+    .eq("client_id", client.id)
+    .order("sort_order", { ascending: true })
+    .order("id", { ascending: true });
+
+  // Nothing planned yet: leave the card hidden rather than
+  // showing the client an empty section.
+  if (error || !data || data.length === 0) {
+    if (error) console.error(error);
+    card.hidden = true;
+    return;
+  }
+
+  const { rows, totals } = planGoals(data, client.monthly_savings);
+
+  card.hidden = false;
+  list.innerHTML = rows.map(goalCardHtml).join("");
+
+  totalEl.innerHTML = `
+    <div class="goal-plan-total-row">
+      <span>Total monthly investment required</span>
+      <strong>${fmtGoal(totals.monthlySip)}</strong>
+    </div>
+    ${totals.stepUpSip > 0 ? `
+      <div class="goal-plan-total-row muted">
+        <span>Or starting at, with a yearly step-up</span>
+        <strong>${fmtGoal(totals.stepUpSip)}</strong>
+      </div>` : ""}
+  `;
+}
+
+function goalCardHtml(row) {
+  const horizon = `${row.years} year${row.years === 1 ? "" : "s"}`;
+
+  if (row.fullyFunded) {
+    return `
+      <div class="goal-plan-item funded">
+        <div class="goal-plan-head">
+          <h4>${escapeHtml(row.goal_name)}</h4>
+          <span class="goal-plan-horizon">${horizon}</span>
+        </div>
+        <p class="goal-plan-funded-note">
+          Already on track — the ${fmtGoal(row.existingCorpus)} set aside for this
+          goal is projected to cover the ${fmtGoal(row.targetAmount)} needed.
+        </p>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="goal-plan-item">
+      <div class="goal-plan-head">
+        <h4>${escapeHtml(row.goal_name)}</h4>
+        <span class="goal-plan-horizon">${horizon}</span>
+      </div>
+
+      <div class="goal-plan-figures">
+        <div>
+          <span>Cost today</span>
+          <strong>${fmtGoal(row.amountToday)}</strong>
+        </div>
+        <div>
+          <span>Expected cost in ${horizon}</span>
+          <strong>${fmtGoal(row.targetAmount)}</strong>
+        </div>
+        ${row.existingCorpus > 0 ? `
+          <div>
+            <span>Already set aside</span>
+            <strong>${fmtGoal(row.existingCorpus)}</strong>
+          </div>` : ""}
+        <div class="highlight">
+          <span>Monthly investment needed</span>
+          <strong>${fmtGoal(row.monthlySip)}</strong>
+        </div>
+        ${row.stepUpSip !== null && row.stepUpPct > 0 ? `
+          <div>
+            <span>Or start at, rising ${row.stepUpPct}% a year</span>
+            <strong>${fmtGoal(row.stepUpSip)}</strong>
+          </div>` : ""}
+        <div>
+          <span>Or invest once, today</span>
+          <strong>${fmtGoal(row.lumpsumToday)}</strong>
+        </div>
+      </div>
+
+      <p class="goal-plan-assumptions">
+        Assumes ${row.returnPct}% return and ${row.inflationPct}% inflation a year.
+      </p>
+    </div>
+  `;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function renderClient(data) {

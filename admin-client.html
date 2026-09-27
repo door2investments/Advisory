@@ -88,6 +88,59 @@
         <div><label>Advisor Expectation: </label><span id="advisor_expectation"></span></div>
       </div>
     </section>
+    <!-- GOAL PLANNING -->
+    <section class="card" id="goalPlanCard">
+      <h2>Goal Planning</h2>
+      <p class="card-sub">
+        Enter each goal amount in <strong>today's money</strong> — it is inflated to the
+        goal date using that goal's own inflation rate. Results recalculate as you
+        type; click <strong>Save</strong> to store a row.
+      </p>
+
+      <div class="goal-table-wrap">
+        <table class="goal-table">
+          <thead>
+            <tr>
+              <th>Goal</th>
+              <th>Amount today (₹)</th>
+              <th>Years</th>
+              <th>Return %</th>
+              <th>Inflation %</th>
+              <th>Step-up %</th>
+              <th>Already saved (₹)</th>
+              <th class="calc">Target on goal date</th>
+              <th class="calc">Shortfall</th>
+              <th class="calc">Monthly SIP</th>
+              <th class="calc">Step-up SIP</th>
+              <th class="calc">Lumpsum today</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="goalRows"></tbody>
+          <tfoot>
+            <tr id="goalTotalsRow" class="goal-totals hidden">
+              <td colspan="7">Total</td>
+              <td class="calc" id="totalTarget">—</td>
+              <td class="calc" id="totalShortfall">—</td>
+              <td class="calc" id="totalSip">—</td>
+              <td class="calc" id="totalStepUpSip">—</td>
+              <td class="calc" id="totalLumpsum">—</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <p id="goalEmpty" class="goal-empty">No goals added yet.</p>
+
+      <div class="goal-actions">
+        <button type="button" id="addGoalBtn" class="secondary-btn">+ Add Goal</button>
+        <span id="goalMessage" class="goal-message"></span>
+      </div>
+
+      <p id="affordability" class="affordability hidden"></p>
+    </section>
+
     <button id="downloadPdfBtn">Download Financial Plan (PDF)</button>
     <!-- <button id="downloadPdfBtnStepup">Download Financial Plan (PDF)</button> -->
     
