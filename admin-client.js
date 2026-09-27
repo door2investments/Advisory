@@ -50,12 +50,12 @@ async function loadClient() {
   supabaseClient
     .from("form_responses")
     .update({ last_accessed_at: new Date().toISOString() })
-    .eq("id", data.id);
+    .eq("mobile_number", data.mobile_number);
 
   clientData = data;
   renderClient(data);
   // loadAdvisorObservations(data.mobile_number)
-  loadGoals(data.id);
+  loadGoals(data.mobile_number);
 }
 
 /************************************
@@ -93,11 +93,11 @@ function showGoalMessage(text, kind = "info") {
   }
 }
 
-async function loadGoals(clientId) {
+async function loadGoals(clientMobileNumber) {
   const { data, error } = await supabaseClient
     .from("client_goals")
     .select("*")
-    .eq("client_id", clientId)
+    .eq("client_mobile_number", clientMobileNumber)
     .order("sort_order", { ascending: true })
     .order("id", { ascending: true });
 
@@ -285,7 +285,7 @@ async function saveGoalRow(tr) {
   saveBtn.disabled = true;
   saveBtn.textContent = "…";
 
-  const payload = { ...goal, client_id: clientData.id };
+  const payload = { ...goal, client_mobile_number: clientData.mobile_number };
   const existingId = tr.dataset.id;
 
   const query = existingId

@@ -47,7 +47,7 @@ async function loadClient() {
   supabaseClient
     .from("form_responses")
     .update({ last_accessed_at: new Date().toISOString() })
-    .eq("id", data.id);
+    .eq("mobile_number", data.mobile_number);
 
   renderClient(data);
   loadAdvisorObservations(data.mobile_number)
@@ -68,7 +68,7 @@ async function loadGoalPlan(client) {
   const { data, error } = await supabaseClient
     .from("client_goals")
     .select("*")
-    .eq("client_id", client.id)
+    .eq("client_mobile_number", client.mobile_number)
     .order("sort_order", { ascending: true })
     .order("id", { ascending: true });
 

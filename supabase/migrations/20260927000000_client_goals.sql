@@ -13,8 +13,10 @@
 create table if not exists public.client_goals (
   id                  bigserial primary key,
 
-  client_id           bigint not null
-                        references public.form_responses (id)
+  -- form_responses has no surrogate key: mobile_number is its
+  -- PRIMARY KEY (bigint), so the goals hang off that.
+  client_mobile_number bigint not null
+                        references public.form_responses (mobile_number)
                         on delete cascade,
 
   goal_name           text not null,
@@ -55,11 +57,11 @@ create table if not exists public.client_goals (
   updated_at          timestamptz not null default now()
 );
 
-create index if not exists client_goals_client_id_idx
-  on public.client_goals (client_id);
+create index if not exists client_goals_client_idx
+  on public.client_goals (client_mobile_number);
 
 create index if not exists client_goals_client_sort_idx
-  on public.client_goals (client_id, sort_order, id);
+  on public.client_goals (client_mobile_number, sort_order, id);
 
 -- Keep updated_at honest.
 create or replace function public.set_updated_at()
