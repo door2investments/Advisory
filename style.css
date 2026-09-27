@@ -452,3 +452,319 @@ span {
   }
 }
 
+
+/* ===============================
+   GOAL PLANNING — ADMIN (editable)
+================================ */
+.card-sub {
+  margin: -6px 0 14px;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.goal-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.goal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 1080px;
+}
+
+.goal-table thead th {
+  background: #0f2a44;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+  padding: 9px 8px;
+  white-space: nowrap;
+}
+
+.goal-table thead th.calc {
+  background: #163a5c;
+  text-align: right;
+}
+
+.goal-table tbody td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+}
+
+.goal-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.goal-input {
+  width: 100%;
+  min-width: 68px;
+  padding: 7px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  background: #fff;
+}
+
+.goal-input:focus {
+  outline: none;
+  border-color: #0f2a44;
+  box-shadow: 0 0 0 3px rgba(15, 42, 68, .12);
+}
+
+.goal-input.goal-name {
+  min-width: 150px;
+}
+
+.goal-table td.calc {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: #1f2937;
+  background: #f9fafb;
+}
+
+.goal-table td.calc.strong {
+  font-weight: 700;
+  color: #0f2a44;
+}
+
+.goal-row.dirty td.calc {
+  background: #fffbeb;
+}
+
+.goal-row.dirty .row-save {
+  background: #b45309;
+}
+
+.goal-row.funded td.calc.strong {
+  color: #047857;
+}
+
+.goal-row-actions {
+  white-space: nowrap;
+}
+
+.goal-row-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.row-save {
+  background: #0f2a44;
+}
+
+.row-delete {
+  background: #e5e7eb;
+  color: #b91c1c;
+  margin-left: 4px;
+  font-weight: 700;
+}
+
+.row-save:disabled {
+  opacity: .6;
+  cursor: default;
+}
+
+.goal-totals td {
+  background: #f1f5f9;
+  font-weight: 700;
+  padding: 10px 8px;
+  color: #0f2a44;
+}
+
+.goal-empty {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.goal-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.secondary-btn {
+  background: #e6f4ef;
+  color: #0f2a44;
+  border: 1px solid #cfe6dd;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  background: #d9ece5;
+}
+
+.goal-message {
+  font-size: 13px;
+}
+
+.goal-message.success { color: #047857; }
+.goal-message.error   { color: #b91c1c; }
+.goal-message.info    { color: #475569; }
+
+.affordability {
+  margin: 14px 0 0;
+  padding: 11px 13px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #065f46;
+}
+
+.affordability.shortfall {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ===============================
+   GOAL PLAN — CLIENT (read-only)
+================================ */
+.goal-plan-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+
+.goal-plan-item.funded {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.goal-plan-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.goal-plan-head h4 {
+  margin: 0;
+  font-size: 15px;
+  color: #0f2a44;
+}
+
+.goal-plan-horizon {
+  font-size: 12px;
+  color: #475569;
+  background: #f1f5f9;
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.goal-plan-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.goal-plan-figures > div {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 9px 11px;
+}
+
+.goal-plan-figures > div.highlight {
+  background: #e6f4ef;
+}
+
+.goal-plan-figures span {
+  display: block;
+  font-size: 11.5px;
+  color: #475569;
+  margin-bottom: 3px;
+  line-height: 1.35;
+}
+
+.goal-plan-figures strong {
+  font-size: 15px;
+  color: #0f2a44;
+  font-variant-numeric: tabular-nums;
+}
+
+.goal-plan-assumptions,
+.goal-plan-funded-note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.goal-plan-funded-note {
+  color: #047857;
+}
+
+.goal-plan-total {
+  margin-top: 4px;
+  border-top: 2px solid #0f2a44;
+  padding-top: 12px;
+}
+
+.goal-plan-total-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+  color: #0f2a44;
+}
+
+.goal-plan-total-row strong {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.goal-plan-total-row.muted {
+  margin-top: 6px;
+  color: #475569;
+  font-size: 13px;
+}
+
+.goal-plan-total-row.muted strong {
+  font-size: 15px;
+}
+
+.goal-plan-basis {
+  margin: 12px 0 0;
+  font-size: 11.5px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .goal-plan-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .goal-plan-figures {
+    grid-template-columns: 1fr 1fr;
+  }
+}
