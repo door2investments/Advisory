@@ -1,0 +1,5 @@
+# Screenshots and sample exports produced by the local verification
+# scripts. Regenerated on demand; never part of the site.
+*.png
+sample-*.csv
+sample-*.pdf
