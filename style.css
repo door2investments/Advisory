@@ -1395,3 +1395,216 @@ a.secondary-btn {
   padding-top: 14px;
   border-top: 1px solid #e5e7eb;
 }
+
+/* ===============================
+   SUMMARY PAGE — VISUAL HIERARCHY
+   Scoped to .summary-page so the admin and client pages keep
+   their existing look.
+
+   The page previously stacked #fff on #f4f6fb with no border or
+   shadow (a ~2% lightness step), then put white collapsibles
+   inside those white cards and near-white tiles inside those.
+   Nothing read as a distinct surface. Each level now steps
+   clearly away from the one behind it.
+================================ */
+
+/* Level 0 — the page sits back further. */
+body.summary-page {
+  background: #eef1f7;
+}
+
+/* Level 1 — sections are defined panels, not floating white. */
+.summary-page .card {
+  background: #fff;
+  border: 1px solid #dfe4ee;
+  box-shadow: 0 1px 2px rgba(15, 42, 68, .04),
+              0 8px 24px rgba(15, 42, 68, .06);
+  padding: 26px 24px;
+}
+
+/* Bigger, firmer section titles with a rule under them. */
+.summary-page .section-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin: 0 0 6px;
+}
+
+.summary-page .summary-head h2 {
+  font-size: 24px;
+  letter-spacing: -.015em;
+}
+
+.summary-page .chart-sub {
+  margin-bottom: 18px;
+}
+
+/* ---- Level 2: goal collapsibles must read as rows ----
+   Tinted against the white card, with a left accent bar so the
+   row is obviously a thing you can open. */
+.summary-page .goal-detail {
+  background: #f5f7fb;
+  border: 1px solid #dfe4ee;
+  border-left: 3px solid #c6d0e0;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.summary-page .goal-detail:hover {
+  background: #eef3fb;
+  border-left-color: #2a78d6;
+}
+
+.summary-page .goal-detail[open] {
+  background: #fff;
+  border-color: #bcd4f2;
+  border-left-color: #2a78d6;
+  box-shadow: 0 2px 10px rgba(15, 42, 68, .07);
+}
+
+.summary-page .goal-detail.funded {
+  border-left-color: #1baf7a;
+}
+
+.summary-page .goal-detail > summary {
+  padding: 14px 16px;
+}
+
+/* A visible affordance, not just a small chevron. */
+.summary-page .goal-detail > summary::after {
+  content: "▾";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e3e9f3;
+  color: #31507a;
+  font-size: 10px;
+  flex: none;
+}
+
+.summary-page .goal-detail[open] > summary::after {
+  background: #2a78d6;
+  color: #fff;
+}
+
+/* ---- Issue 3: the year must not shift when the SIP has an
+   extra digit. Fixed-width, right-aligned columns put every
+   year at the same x regardless of what sits beside it. ---- */
+.summary-page .gd-head-figures {
+  display: grid;
+  grid-template-columns: 52px 118px;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.summary-page .gd-when,
+.summary-page .gd-sip,
+.summary-page .funded-tag {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-page .gd-sip {
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.summary-page .funded-tag {
+  grid-column: 2;
+  white-space: nowrap;
+}
+
+/* ---- Level 3: figure tiles inside an open goal ---- */
+.summary-page .goal-detail-body {
+  padding: 2px 16px 16px;
+  border-top: 1px solid #e8edf5;
+}
+
+.summary-page .gd-figures > div,
+.summary-page .gd-route {
+  background: #f3f6fb;
+  border: 1px solid #e2e8f2;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.summary-page .gd-route.accent {
+  background: #e6f4ef;
+  border-color: #b9ddcd;
+}
+
+.summary-page .gd-figures span,
+.summary-page .gd-route span {
+  color: #51607a;
+  font-weight: 500;
+}
+
+/* ---- KPI tiles get the same treatment ---- */
+.summary-page .kpi {
+  background: #f3f6fb;
+  border-color: #e2e8f2;
+}
+
+.summary-page .kpi.accent {
+  background: #e6f4ef;
+  border-color: #b9ddcd;
+}
+
+/* ---- the split ladder inside a goal ---- */
+.summary-page .gd-splits > summary {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: #eaf2fd;
+  border: 1px solid #cfe0f8;
+}
+
+.summary-page .gd-splits[open] > summary {
+  margin-bottom: 12px;
+}
+
+/* Keep the panel treatment on paper too. */
+@media print {
+  body.summary-page { background: #fff; }
+
+  .summary-page .card {
+    box-shadow: none;
+    border: 1px solid #c9d2e0;
+  }
+
+  .summary-page .goal-detail {
+    background: #fff;
+    border: 1px solid #c9d2e0;
+    border-left: 3px solid #2a78d6;
+  }
+}
+
+/* The figures group is a flex item, so a long goal name was
+   squeezing it and dragging the year out of line on narrow
+   screens. Fix its width and let the name wrap instead. */
+.summary-page .gd-head-figures {
+  flex: none;
+}
+
+.summary-page .gd-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 460px) {
+  .summary-page .gd-head-figures {
+    grid-template-columns: 46px 104px;
+    gap: 10px;
+  }
+
+  .summary-page .goal-detail > summary {
+    padding: 12px 13px;
+    gap: 8px;
+  }
+
+  .summary-page .gd-sip { font-size: 14px; }
+}
