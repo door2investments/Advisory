@@ -14,6 +14,7 @@ const supabaseClient = window.supabase.createClient(
 const tableBody = document.getElementById("clientsBody");
 const baseUrl = `${location.origin}/Advisory/client.html?token=`;
 const AdminClientUrl = `${location.origin}/Advisory/admin-client.html?token=`;
+const GoalPlannerUrl = `${location.origin}/Advisory/goal.html?token=`;
 
 async function loadClients() {
   const { data, error } = await supabaseClient
@@ -29,6 +30,7 @@ async function loadClients() {
   data.forEach(client => {
     const clientUrl = baseUrl + client.access_token;
     const adminUrl = AdminClientUrl + client.access_token;
+    const goalUrl = GoalPlannerUrl + client.access_token;
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -45,6 +47,10 @@ async function loadClients() {
           </span>
         </td>
         
+        <td data-label="Goal Planner">
+          <a href="${goalUrl}" target="_blank">Plan a Goal</a>
+        </td>
+
         <td data-label="Add Observation">
           <a href="#" onclick="openModal('${client.full_name}','${client.mobile_number}')">
             Add

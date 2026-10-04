@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Goal Planner | Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="brand-header">
+    <h1>Wealth &amp; Investment Advisory</h1>
+    <p>Goal Planner (Admin View)</p>
+  </header>
+
+  <main class="container">
+
+    <!-- ============ WHO IS THIS FOR ============ -->
+    <section class="card">
+      <h2>Who is this goal for?</h2>
+
+      <div class="owner-tabs">
+        <button type="button" id="tabClient" class="owner-tab active">Existing client</button>
+        <button type="button" id="tabProspect" class="owner-tab">New prospect</button>
+      </div>
+
+      <!-- Existing client -->
+      <div id="clientPane">
+        <div class="field-row">
+          <label for="clientSearch">Search by name or mobile</label>
+          <input type="search" id="clientSearch" class="goal-input"
+                 placeholder="Start typing a name or mobile number…"
+                 autocomplete="off" />
+        </div>
+        <div id="clientResults" class="client-results"></div>
+        <p id="clientSearchHint" class="field-hint">
+          Type at least two characters to search.
+        </p>
+      </div>
+
+      <!-- Prospect -->
+      <div id="prospectPane" hidden>
+        <div class="field-grid">
+          <div class="field-row">
+            <label for="prospectName">Prospect name</label>
+            <input type="text" id="prospectName" class="goal-input"
+                   placeholder="Full name" />
+          </div>
+          <div class="field-row">
+            <label for="prospectMobile">Prospect mobile</label>
+            <input type="text" id="prospectMobile" class="goal-input"
+                   placeholder="Optional" />
+          </div>
+        </div>
+        <p class="field-hint">
+          A prospect does not need to have filled the onboarding form. You can
+          send them this goal with the share link once it is saved.
+        </p>
+      </div>
+
+      <div id="selectedOwner" class="selected-owner" hidden></div>
+    </section>
+
+    <!-- ============ CLIENT INFORMATION ============ -->
+    <section class="card" id="clientInfoCard" hidden>
+      <h2>Client Information</h2>
+      <div class="grid-2">
+        <div><label>Name: </label><span id="ci_full_name">—</span></div>
+        <div><label>Mobile: </label><span id="ci_mobile_number">—</span></div>
+        <div><label>Email: </label><span id="ci_email">—</span></div>
+        <div><label>Date of Birth: </label><span id="ci_date_of_birth">—</span></div>
+        <div><label>Marital Status: </label><span id="ci_marital_status">—</span></div>
+        <div><label>Dependents: </label><span id="ci_dependents">—</span></div>
+        <div><label>Monthly Expenses: </label><span id="ci_monthly_expenses">—</span></div>
+        <div><label>Monthly Savings: </label><span id="ci_monthly_savings">—</span></div>
+        <div><label>Investment Objective: </label><span id="ci_investment_objective">—</span></div>
+        <div><label>Investment Horizon: </label><span id="ci_investment_horizon">—</span></div>
+      </div>
+      <p class="field-hint" id="existingGoalsHint" hidden></p>
+    </section>
+
+    <!-- ============ GOAL DETAILS ============ -->
+    <section class="card">
+      <h2>Goal Details</h2>
+
+      <div class="field-grid">
+        <div class="field-row span-2">
+          <label for="goalName">Goal name <span class="req">*</span></label>
+          <input type="text" id="goalName" class="goal-input"
+                 placeholder="e.g. Daughter's higher education" />
+        </div>
+
+        <div class="field-row span-2">
+          <label for="goalDescription">Goal description</label>
+          <textarea id="goalDescription" class="goal-input" rows="2"
+                    placeholder="What this goal is for, and anything the client should remember about it."></textarea>
+        </div>
+
+        <div class="field-row">
+          <label for="amountToday">Amount as per today's value (₹) <span class="req">*</span></label>
+          <input type="number" id="amountToday" class="goal-input"
+                 min="1" step="1000" placeholder="2500000" />
+        </div>
+
+        <div class="field-row">
+          <label for="years">Number of years <span class="req">*</span></label>
+          <input type="number" id="years" class="goal-input"
+                 min="1" max="60" step="1" placeholder="15" />
+        </div>
+
+        <div class="field-row">
+          <label for="inflationPct">Inflation (% p.a.) <span class="req">*</span></label>
+          <input type="number" id="inflationPct" class="goal-input"
+                 min="0" max="30" step="0.5" value="6" />
+        </div>
+
+        <div class="field-row">
+          <label for="returnPct">Return assumed (% p.a.) <span class="req">*</span></label>
+          <input type="number" id="returnPct" class="goal-input"
+                 min="0" max="50" step="0.5" value="12" />
+        </div>
+
+        <div class="field-row">
+          <label for="stepUpPct">Annual SIP step-up (%)</label>
+          <input type="number" id="stepUpPct" class="goal-input"
+                 min="0" max="100" step="1" value="10" />
+        </div>
+
+        <div class="field-row">
+          <label for="existingCorpus">Already saved for this goal (₹)</label>
+          <input type="number" id="existingCorpus" class="goal-input"
+                 min="0" step="1000" value="0" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE PLAN ============ -->
+    <section class="card" id="planCard">
+      <h2>What it takes to reach this goal</h2>
+
+      <p id="planEmpty" class="field-hint">
+        Enter an amount and a number of years to see the plan.
+      </p>
+
+      <div id="planBody" hidden>
+        <!-- Headline figures -->
+        <div class="plan-tiles">
+          <div class="plan-tile">
+            <span>Amount today</span>
+            <strong id="outAmountToday">—</strong>
+          </div>
+          <div class="plan-tile accent">
+            <span>Inflated amount after <em id="outYearsLabel">—</em></span>
+            <strong id="outTargetAmount">—</strong>
+          </div>
+          <div class="plan-tile" id="tileCorpus" hidden>
+            <span>Projected value of amount already saved</span>
+            <strong id="outCorpusAtGoalDate">—</strong>
+          </div>
+          <div class="plan-tile" id="tileShortfall" hidden>
+            <span>Shortfall still to fund</span>
+            <strong id="outShortfall">—</strong>
+          </div>
+        </div>
+
+        <p id="fundedNote" class="funded-note" hidden></p>
+
+        <!-- The three pure routes -->
+        <h3>Funding routes</h3>
+        <div class="plan-tiles">
+          <div class="plan-tile highlight">
+            <span>Monthly SIP required</span>
+            <strong id="outMonthlySip">—</strong>
+          </div>
+          <div class="plan-tile">
+            <span>Lumpsum required today</span>
+            <strong id="outLumpsum">—</strong>
+          </div>
+          <div class="plan-tile">
+            <span>Step-up SIP, starting at
+              (<em id="outStepUpLabel">—</em> a year)</span>
+            <strong id="outStepUpSip">—</strong>
+          </div>
+        </div>
+
+        <!-- Upfront + SIP ladder -->
+        <h3>Initial lumpsum plus SIP</h3>
+        <p class="card-sub">
+          If part of the goal is funded now, the rest can be covered by a
+          smaller monthly SIP. Each row funds that share of the target upfront.
+        </p>
+        <div class="goal-table-wrap">
+          <table class="goal-table split-table">
+            <thead>
+              <tr>
+                <th>Funded upfront</th>
+                <th class="calc">Lumpsum now</th>
+                <th class="calc">Plus monthly SIP</th>
+                <th class="calc">Target from lumpsum</th>
+                <th class="calc">Target from SIP</th>
+              </tr>
+            </thead>
+            <tbody id="splitRows"></tbody>
+          </table>
+        </div>
+
+        <div class="goal-actions">
+          <button type="button" id="downloadCsvBtn" class="secondary-btn">
+            ⤓ Download month-by-month CSV (all options)
+          </button>
+        </div>
+        <p class="field-hint">
+          The CSV has one row per month for the whole horizon, with the
+          contribution and running balance of every option side by side.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ SAVE / SHARE ============ -->
+    <section class="card">
+      <h2>Save &amp; share</h2>
+
+      <div class="goal-actions">
+        <button type="button" id="saveGoalBtn" class="primary-btn">Save goal</button>
+        <button type="button" id="newGoalBtn" class="secondary-btn">Start another goal</button>
+        <span id="saveMessage" class="goal-message"></span>
+      </div>
+
+      <div id="shareBox" class="share-box" hidden>
+        <p>
+          <strong>Share link</strong> — send this to the client or prospect.
+          It opens this goal only, read-only.
+        </p>
+        <div class="share-row">
+          <input type="text" id="shareLink" class="goal-input" readonly />
+          <button type="button" id="copyShareBtn" class="secondary-btn">Copy</button>
+          <a id="openShareBtn" class="secondary-btn" target="_blank" rel="noopener">Open</a>
+        </div>
+        <p id="clientPageNote" class="field-hint" hidden></p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Wealth &amp; Investment Advisory · Mutual fund investments are subject to market risks.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script type="module" src="goal.js"></script>
+</body>
+</html>

@@ -2,7 +2,13 @@
  * Client Dashboard – Token Based
  ************************************/
 
-import { planGoals, formatCurrency as fmtGoal } from "./goal-planner.js";
+import {
+  planGoals,
+  buildGoalCsv,
+  downloadCsv,
+  formatCurrency as fmtGoal,
+  SPLIT_PERCENTAGES
+} from "./goal-planner.js";
 
 // Read token from URL
 const params = new URLSearchParams(window.location.search);
@@ -83,7 +89,20 @@ async function loadGoalPlan(client) {
   const { rows, totals } = planGoals(data, client.monthly_savings);
 
   card.hidden = false;
-  list.innerHTML = rows.map(goalCardHtml).join("");
+  list.innerHTML = rows.map((row, i) => goalCardHtml(row, i)).join("");
+
+  // Each card can export its own month-by-month schedule.
+  list.querySelectorAll(".goal-csv-btn").forEach(button => {
+    button.addEventListener("click", () => {
+      const plan = rows[Number(button.dataset.index)];
+      const name = [client.full_name, plan.goal_name || "goal", "investment-schedule"]
+        .filter(Boolean)
+        .join("-")
+        .replace(/[^a-z0-9-]+/gi, "-")
+        .replace(/-+/g, "-");
+      downloadCsv(`${name}.csv`, buildGoalCsv(plan, SPLIT_PERCENTAGES));
+    });
+  });
 
   totalEl.innerHTML = `
     <div class="goal-plan-total-row">
@@ -98,7 +117,7 @@ async function loadGoalPlan(client) {
   `;
 }
 
-function goalCardHtml(row) {
+function goalCardHtml(row, index) {
   const horizon = `${row.years} year${row.years === 1 ? "" : "s"}`;
 
   if (row.fullyFunded) {
@@ -152,9 +171,16 @@ function goalCardHtml(row) {
         </div>
       </div>
 
+      ${row.goal_description ? `
+        <p class="goal-plan-description">${escapeHtml(row.goal_description)}</p>` : ""}
+
       <p class="goal-plan-assumptions">
         Assumes ${row.returnPct}% return and ${row.inflationPct}% inflation a year.
       </p>
+
+      <button type="button" class="goal-csv-btn" data-index="${index}">
+        ⤓ Download month-by-month CSV
+      </button>
     </div>
   `;
 }

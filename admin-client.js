@@ -54,6 +54,12 @@ async function loadClient() {
 
   clientData = data;
   renderClient(data);
+
+  // Carry the client through to the full-detail goal planner.
+  const plannerLink = document.getElementById("fullGoalPlannerLink");
+  if (plannerLink && accessToken) {
+    plannerLink.href = `goal.html?token=${encodeURIComponent(accessToken)}`;
+  }
   // loadAdvisorObservations(data.mobile_number)
   loadGoals(data.mobile_number);
 }
