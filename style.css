@@ -11,7 +11,8 @@
 body {
   margin: 0;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f4f6fb;
+  /* Sits a step back from the cards, so panels read as panels. */
+  background: #eef1f7;
   color: #1f2937;
   line-height: 1.6;
 }
@@ -425,9 +426,12 @@ footer {
 
 .card {
   background: #fff;
+  border: 1px solid #dfe4ee;
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 24px;
+  box-shadow: 0 1px 2px rgba(15, 42, 68, .04),
+              0 8px 24px rgba(15, 42, 68, .06);
 }
 
 .grid-2 {
@@ -1398,8 +1402,10 @@ a.secondary-btn {
 
 /* ===============================
    SUMMARY PAGE — VISUAL HIERARCHY
-   Scoped to .summary-page so the admin and client pages keep
-   their existing look.
+   The page background and the card border/shadow are site-wide
+   (see `body` and `.card` above). What stays scoped here is what
+   only this page has: the goal collapsibles, their figure tiles
+   and the larger section titles.
 
    The page previously stacked #fff on #f4f6fb with no border or
    shadow (a ~2% lightness step), then put white collapsibles
@@ -1408,19 +1414,8 @@ a.secondary-btn {
    clearly away from the one behind it.
 ================================ */
 
-/* Level 0 — the page sits back further. */
-body.summary-page {
-  background: #eef1f7;
-}
-
-/* Level 1 — sections are defined panels, not floating white. */
-.summary-page .card {
-  background: #fff;
-  border: 1px solid #dfe4ee;
-  box-shadow: 0 1px 2px rgba(15, 42, 68, .04),
-              0 8px 24px rgba(15, 42, 68, .06);
-  padding: 26px 24px;
-}
+/* Levels 0 and 1 (page background, card border and shadow) now live
+   on `body` and `.card` so every page shares them. */
 
 /* Bigger, firmer section titles with a rule under them. */
 .summary-page .section-title {
@@ -1607,4 +1602,21 @@ body.summary-page {
   }
 
   .summary-page .gd-sip { font-size: 14px; }
+}
+
+/* ===============================
+   SHARED SURFACES
+================================ */
+
+/* A table that is its own panel (admin list) rather than sitting
+   inside a .card still needs an edge. */
+.container > table,
+.page > table {
+  border: 1px solid #dfe4ee;
+}
+
+/* Inner tiles read against a white card everywhere, not just on
+   the summary page. */
+.goal-table td.calc {
+  background: #f3f6fb;
 }
