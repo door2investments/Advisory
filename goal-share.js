@@ -88,8 +88,13 @@ async function load() {
       .eq("mobile_number", goal.client_mobile_number)
       .single();
     ownerName = (client && client.full_name) || "";
-  } else {
-    ownerName = goal.prospect_name || "";
+  } else if (goal.prospect_id) {
+    const { data: prospect } = await supabaseClient
+      .from("prospects")
+      .select("full_name")
+      .eq("id", goal.prospect_id)
+      .single();
+    ownerName = (prospect && prospect.full_name) || "";
   }
 
   render(goal);

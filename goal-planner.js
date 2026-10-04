@@ -437,3 +437,187 @@ export function downloadCsv(filename, contents) {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+
+/************************************************************
+ * PORTFOLIO — every goal for one person
+ ************************************************************/
+
+/**
+ * Plan a whole set of goals and summarise them.
+ *
+ * Returns the individual plans (sorted by how soon they fall
+ * due) plus the combined figures a summary page leads with.
+ */
+export function planPortfolio(goals, monthlySavings = null) {
+  const rows = (goals || [])
+    .map(planGoal)
+    .sort((a, b) => a.years - b.years || String(a.goal_name).localeCompare(String(b.goal_name)));
+
+  const sum = key => rows.reduce((acc, r) => acc + (Number(r[key]) || 0), 0);
+
+  const totals = {
+    count: rows.length,
+    amountToday: sum("amountToday"),
+    targetAmount: sum("targetAmount"),
+    existingCorpus: sum("existingCorpus"),
+    corpusAtGoalDate: sum("corpusAtGoalDate"),
+    shortfall: sum("shortfall"),
+    monthlySip: sum("monthlySip"),
+    stepUpSip: sum("stepUpSip"),
+    lumpsumToday: sum("lumpsumToday"),
+    fundedCount: rows.filter(r => r.fullyFunded).length,
+    nearestYears: rows.length ? Math.min(...rows.map(r => r.years)) : null,
+    furthestYears: rows.length ? Math.max(...rows.map(r => r.years)) : null
+  };
+
+  const savings = Number(monthlySavings);
+  if (Number.isFinite(savings) && savings > 0) {
+    totals.monthlySavings = savings;
+    totals.surplus = savings - totals.monthlySip;
+    totals.affordable = totals.surplus >= 0;
+    totals.savingsUtilisationPct = (totals.monthlySip / savings) * 100;
+  }
+
+  return { rows, totals };
+}
+
+/**
+ * One CSV covering every goal for a person: each goal's own
+ * level-SIP schedule side by side, plus a combined column.
+ */
+export function buildPortfolioCsv(portfolio) {
+  const { rows, totals } = portfolio;
+  if (rows.length === 0) return "";
+
+  const horizon = Math.max(...rows.map(r => r.years));
+  const months = horizon * 12;
+
+  const series = rows.map(row => ({
+    label: row.goal_name || "Goal",
+    rows: buildSchedule({
+      years: row.years,
+      annualReturnPct: row.returnPct,
+      monthlySip: row.monthlySip || 0
+    })
+  }));
+
+  const lines = [];
+  lines.push(csvRow(["Goal plan summary"]));
+  lines.push(csvRow(["Goals", totals.count]));
+  lines.push(csvRow(["Combined target on goal dates", round0(totals.targetAmount)]));
+  lines.push(csvRow(["Combined monthly SIP", round0(totals.monthlySip)]));
+  lines.push("");
+
+  lines.push(csvRow([
+    "Goal", "Years", "Amount today", "Inflation %", "Target on goal date",
+    "Already saved", "Shortfall", "Return %", "Monthly SIP",
+    "Step-up SIP", "Lumpsum today"
+  ]));
+  for (const r of rows) {
+    lines.push(csvRow([
+      r.goal_name || "", r.years, round0(r.amountToday), r.inflationPct,
+      round0(r.targetAmount), round0(r.existingCorpus), round0(r.shortfall),
+      r.returnPct, round0(r.monthlySip), round0(r.stepUpSip), round0(r.lumpsumToday)
+    ]));
+  }
+  lines.push("");
+
+  const header = ["Month", "Calendar month"];
+  for (const s of series) header.push(`${s.label} - SIP`, `${s.label} - balance`);
+  header.push("All goals - SIP", "All goals - balance");
+  lines.push(csvRow(header));
+
+  const startDate = new Date();
+  for (let i = 0; i < months; i++) {
+    const date = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+    const cells = [i + 1, isoMonth(date)];
+    let sip = 0, bal = 0;
+
+    for (const s of series) {
+      const row = s.rows[i];
+      // A goal that has already matured contributes nothing further,
+      // but its accumulated corpus stays in the combined balance.
+      const contribution = row ? row.contribution : 0;
+      const balance = row ? row.closing : s.rows[s.rows.length - 1].closing;
+      cells.push(round0(contribution), round0(balance));
+      sip += contribution;
+      bal += balance;
+    }
+
+    cells.push(round0(sip), round0(bal));
+    lines.push(csvRow(cells));
+  }
+
+  return lines.join("\r\n");
+}
+
+/************************************************************
+ * TIMELINE CHART GEOMETRY
+ *
+ * Returns plain numbers so the page can render inline SVG with
+ * no charting library — which keeps it printable and dependency
+ * free. One series (the target amount), so no legend is needed
+ * and colour carries no meaning beyond "this is a bar".
+ ************************************************************/
+
+/** "Nice" axis maximum: 1, 2 or 5 x a power of ten. */
+export function niceMax(value) {
+  if (!(value > 0)) return 1;
+  const exponent = Math.floor(Math.log10(value));
+  const magnitude = Math.pow(10, exponent);
+  const fraction = value / magnitude;
+  const step = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10;
+  return step * magnitude;
+}
+
+/** Short Indian-notation axis labels: 12L, 1.5Cr. */
+export function compactINR(value) {
+  const n = Number(value) || 0;
+  if (Math.abs(n) >= 1e7) return `${+(n / 1e7).toFixed(2)}Cr`;
+  if (Math.abs(n) >= 1e5) return `${+(n / 1e5).toFixed(1)}L`;
+  if (Math.abs(n) >= 1e3) return `${Math.round(n / 1e3)}K`;
+  return String(Math.round(n));
+}
+
+/**
+ * Lay out one horizontal bar per goal, ordered soonest first.
+ * Bar length encodes the inflated target; the year the goal
+ * falls due is carried in the label, not a second axis.
+ */
+export function timelineGeometry(rows, options = {}) {
+  const barHeight = options.barHeight ?? 26;
+  const gap = options.gap ?? 14;
+  const axisBand = options.axisBand ?? 28;
+  const plotLeft = options.plotLeft ?? 0;
+  const plotWidth = options.plotWidth ?? 100;
+
+  const max = niceMax(Math.max(...rows.map(r => r.targetAmount), 1));
+  const thisYear = new Date().getFullYear();
+
+  const bars = rows.map((row, i) => ({
+    goal: row,
+    label: row.goal_name || "Goal",
+    year: thisYear + row.years,
+    value: row.targetAmount,
+    y: i * (barHeight + gap),
+    height: barHeight,
+    width: Math.max((row.targetAmount / max) * plotWidth, 2),
+    x: plotLeft
+  }));
+
+  const ticks = [0, 0.25, 0.5, 0.75, 1].map(f => ({
+    value: max * f,
+    x: plotLeft + f * plotWidth,
+    label: compactINR(max * f)
+  }));
+
+  return {
+    bars,
+    ticks,
+    max,
+    plotHeight: rows.length * (barHeight + gap) - gap,
+    // The container must include the axis band, or the labels
+    // get cropped and the card grows a nested scrollbar.
+    totalHeight: rows.length * (barHeight + gap) - gap + axisBand
+  };
+}

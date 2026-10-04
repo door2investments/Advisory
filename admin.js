@@ -15,6 +15,7 @@ const tableBody = document.getElementById("clientsBody");
 const baseUrl = `${location.origin}/Advisory/client.html?token=`;
 const AdminClientUrl = `${location.origin}/Advisory/admin-client.html?token=`;
 const GoalPlannerUrl = `${location.origin}/Advisory/goal.html?token=`;
+const SummaryUrl = `${location.origin}/Advisory/summary.html?token=`;
 
 async function loadClients() {
   const { data, error } = await supabaseClient
@@ -31,6 +32,7 @@ async function loadClients() {
     const clientUrl = baseUrl + client.access_token;
     const adminUrl = AdminClientUrl + client.access_token;
     const goalUrl = GoalPlannerUrl + client.access_token;
+    const summaryUrl = SummaryUrl + client.access_token;
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -48,7 +50,11 @@ async function loadClients() {
         </td>
         
         <td data-label="Goal Planner">
-          <a href="${goalUrl}" target="_blank">Plan a Goal</a>
+          <a href="${goalUrl}" target="_blank">Plan a Goal</a><br/>
+          <a href="${summaryUrl}" target="_blank">Goal Summary</a><br/>
+          <span class="copy" onclick="navigator.clipboard.writeText('${summaryUrl}')">
+            Copy Summary Link
+          </span>
         </td>
 
         <td data-label="Add Observation">

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Goal Plan Summary | Wealth &amp; Investment Advisory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261004" />
+</head>
+
+<body class="summary-page">
+
+  <header class="brand-header summary-brand">
+    <div>
+      <h1>Wealth &amp; Investment Advisory</h1>
+      <p>Mutual Fund Distributor · ARN-348767</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div id="loadingNote" class="card">
+      <p class="field-hint">Loading the goal plan…</p>
+    </div>
+
+    <div id="errorNote" class="card" hidden>
+      <h2>Link not valid</h2>
+      <p class="field-hint" id="errorText"></p>
+    </div>
+
+    <div id="summaryBody" hidden>
+
+      <!-- ===== WHO ===== -->
+      <section class="card summary-head" data-section="header">
+        <div class="summary-head-row">
+          <div>
+            <h2 id="personName">Goal Plan</h2>
+            <p class="meta" id="personMeta"></p>
+          </div>
+          <div class="summary-head-meta">
+            <span id="planDate"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== HEADLINE NUMBERS ===== -->
+      <section class="card" data-section="headline">
+        <h3 class="section-title">The plan at a glance</h3>
+        <div class="kpi-row" id="kpiRow"></div>
+        <p id="affordabilityNote" class="affordability" hidden></p>
+      </section>
+
+      <!-- ===== TIMELINE ===== -->
+      <section class="card" data-section="timeline" id="timelineSection">
+        <h3 class="section-title">
+          What each goal will cost, and when
+        </h3>
+        <p class="chart-sub">
+          Bar length is the amount each goal is expected to cost by the year it
+          falls due, after inflation.
+        </p>
+        <div class="chart" id="timelineChart"></div>
+      </section>
+
+      <!-- ===== GOAL DETAIL ===== -->
+      <section class="card" data-section="goals">
+        <h3 class="section-title">Each goal in detail</h3>
+        <p class="chart-sub">Open a goal to see how it can be funded.</p>
+        <div id="goalList"></div>
+      </section>
+
+      <!-- ===== ACTIONS ===== -->
+      <section class="card no-print" data-section="actions">
+        <div class="goal-actions">
+          <button type="button" id="csvBtn" class="secondary-btn" data-part="schedule">
+            ⤓ Download month-by-month CSV
+          </button>
+          <button type="button" id="printBtn" class="secondary-btn" data-part="print">
+            ⎙ Print / Save as PDF
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== DISCLOSURES ===== -->
+      <section class="card" data-section="disclosures">
+        <p class="goal-plan-basis">
+          These figures are illustrative and based on the assumed rates of return and
+          inflation shown against each goal. Mutual fund investments are subject to
+          market risks; please read all scheme-related documents carefully. Past
+          performance does not guarantee future returns. Investments are held directly
+          in your own name with the respective fund houses, and the distributor does
+          not handle or control investor funds.
+        </p>
+        <p class="field-hint">
+          Raviteja Soma · Wealth &amp; Investment Advisory · 9390250541 · ARN-348767
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    Wealth &amp; Investment Advisory · Mutual fund investments are subject to market risks.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script type="module" src="summary.js?v=20261004"></script>
+</body>
+</html>

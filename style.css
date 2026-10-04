@@ -1043,3 +1043,355 @@ a.secondary-btn {
   font-size: 13.5px;
   line-height: 1.55;
 }
+
+/* ===============================
+   GOAL PLAN SUMMARY
+================================ */
+.summary-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.summary-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.summary-head h2 {
+  margin: 0 0 4px;
+}
+
+.summary-head-meta {
+  font-size: 12.5px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.section-title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: #0f2a44;
+}
+
+.chart-sub {
+  margin: 0 0 16px;
+  font-size: 12.5px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* --- KPI row --- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.kpi {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 13px 15px;
+}
+
+.kpi.accent {
+  background: #e6f4ef;
+  border-color: #cfe6dd;
+}
+
+.kpi-label {
+  display: block;
+  font-size: 11.5px;
+  color: #475569;
+  margin-bottom: 5px;
+}
+
+.kpi-value {
+  display: block;
+  font-size: 21px;
+  color: #0f2a44;
+  line-height: 1.2;
+}
+
+.kpi-note {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* --- timeline chart ---
+   Built from divs with percentage widths so the type never
+   rescales with the viewport and it prints at full fidelity.
+   One series, so colour carries no meaning and no legend is
+   needed: the section title names what the bars are. */
+.chart-plot {
+  position: relative;
+}
+
+.chart-gridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #e5e7eb;   /* hairline, solid, one shade off the surface */
+  pointer-events: none;
+}
+
+.chart-row + .chart-row {
+  margin-top: 16px;
+}
+
+.chart-row-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.chart-row-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f2a44;
+}
+
+.chart-row-year {
+  font-size: 11.5px;
+  color: #6b7280;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-bar-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.chart-bar {
+  height: 14px;
+  background: #2a78d6;         /* validated: >= 3:1 on both surfaces */
+  border-radius: 0 4px 4px 0;  /* rounded data-end, square at the baseline */
+  min-width: 2px;
+  transition: filter .15s ease;
+}
+
+.chart-bar:hover,
+.chart-bar:focus-visible {
+  filter: brightness(1.08);
+  outline: none;
+}
+
+.chart-bar:focus-visible {
+  box-shadow: 0 0 0 3px rgba(42, 120, 214, .35);
+}
+
+.chart-bar.funded {
+  background: #1baf7a;
+}
+
+.chart-bar-value {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #0f2a44;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.chart-axis {
+  position: relative;
+  height: 24px;
+  margin-top: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.chart-tick {
+  position: absolute;
+  top: 6px;
+  transform: translateX(-50%);
+  font-size: 10.5px;
+  color: #898781;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.chart-tick:first-child { transform: none; }
+.chart-tick:last-child  { transform: translateX(-100%); }
+
+/* --- per-goal cards --- */
+.goal-detail {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.goal-detail[open] {
+  border-color: #cfe6dd;
+}
+
+.goal-detail > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 14px;
+}
+
+.goal-detail > summary::-webkit-details-marker { display: none; }
+
+.goal-detail > summary::after {
+  content: "▾";
+  font-size: 11px;
+  color: #6b7280;
+  transition: transform .15s ease;
+}
+
+.goal-detail[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+.gd-name {
+  font-weight: 600;
+  color: #0f2a44;
+  flex: 1 1 auto;
+}
+
+.gd-head-figures {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.gd-when {
+  font-size: 12px;
+  color: #6b7280;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-sip {
+  font-weight: 700;
+  color: #0f2a44;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-sip small {
+  font-weight: 400;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.funded-tag {
+  color: #047857;
+  font-size: 12.5px;
+}
+
+.goal-detail-body {
+  padding: 0 15px 15px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.gd-figures,
+.gd-routes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.gd-figures > div,
+.gd-route {
+  background: #f8fafc;
+  border-radius: 9px;
+  padding: 9px 11px;
+}
+
+.gd-route.accent {
+  background: #e6f4ef;
+}
+
+.gd-figures span,
+.gd-route span {
+  display: block;
+  font-size: 11px;
+  color: #475569;
+  margin-bottom: 3px;
+}
+
+.gd-figures strong,
+.gd-route strong {
+  font-size: 15px;
+  color: #0f2a44;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-splits {
+  margin-top: 13px;
+}
+
+.gd-splits > summary {
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2a78d6;
+  margin-bottom: 9px;
+}
+
+/* ===============================
+   PRINT / SAVE AS PDF
+================================ */
+@media print {
+  .no-print,
+  .brand-header .brand-contact,
+  footer {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 14px;
+  }
+
+  .goal-detail {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Collapsed cards must print their contents. */
+  .goal-detail > summary::after { display: none; }
+  details > div,
+  details .goal-table-wrap { display: block !important; }
+
+  .chart-bar {
+    /* keep the fill when browsers drop backgrounds */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .goal-table-wrap { overflow: visible; }
+}
+
+.share-divider {
+  margin: 16px 0 10px !important;
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
