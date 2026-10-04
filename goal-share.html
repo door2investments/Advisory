@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Goal Plan | Wealth &amp; Investment Advisory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="brand-header">
+    <h1>Wealth &amp; Investment Advisory</h1>
+    <p>Mutual Fund Distributor · ARN-348767</p>
+  </header>
+
+  <main class="container">
+
+    <div id="loadingNote" class="card">
+      <p class="field-hint">Loading your goal plan…</p>
+    </div>
+
+    <div id="errorNote" class="card" hidden>
+      <h2>Link not valid</h2>
+      <p class="field-hint" id="errorText"></p>
+    </div>
+
+    <div id="shareBody" hidden>
+
+      <section class="card">
+        <h2 id="shareGoalName">Goal</h2>
+        <p class="meta" id="shareFor"></p>
+        <p id="shareDescription" class="goal-description" hidden></p>
+      </section>
+
+      <section class="card">
+        <h2>What this goal will cost</h2>
+        <div class="plan-tiles">
+          <div class="plan-tile">
+            <span>Cost today</span>
+            <strong id="shareAmountToday">—</strong>
+          </div>
+          <div class="plan-tile accent">
+            <span>Expected cost in <em id="shareYearsLabel">—</em></span>
+            <strong id="shareTargetAmount">—</strong>
+          </div>
+          <div class="plan-tile" id="shareTileCorpus" hidden>
+            <span>Projected value of what is already saved</span>
+            <strong id="shareCorpus">—</strong>
+          </div>
+          <div class="plan-tile" id="shareTileShortfall" hidden>
+            <span>Still to fund</span>
+            <strong id="shareShortfall">—</strong>
+          </div>
+        </div>
+        <p class="field-hint" id="shareAssumptions"></p>
+        <p id="shareFundedNote" class="funded-note" hidden></p>
+      </section>
+
+      <section class="card" id="shareRoutesCard">
+        <h2>How it can be funded</h2>
+        <div class="plan-tiles">
+          <div class="plan-tile highlight">
+            <span>Monthly SIP</span>
+            <strong id="shareSip">—</strong>
+          </div>
+          <div class="plan-tile">
+            <span>Or a one-time amount today</span>
+            <strong id="shareLumpsum">—</strong>
+          </div>
+          <div class="plan-tile">
+            <span>Or a step-up SIP starting at
+              (<em id="shareStepUpLabel">—</em>)</span>
+            <strong id="shareStepUp">—</strong>
+          </div>
+        </div>
+
+        <h3>Part now, the rest monthly</h3>
+        <div class="goal-table-wrap">
+          <table class="goal-table split-table">
+            <thead>
+              <tr>
+                <th>Funded upfront</th>
+                <th class="calc">Amount now</th>
+                <th class="calc">Plus monthly SIP</th>
+              </tr>
+            </thead>
+            <tbody id="shareSplitRows"></tbody>
+          </table>
+        </div>
+
+        <div class="goal-actions">
+          <button type="button" id="shareCsvBtn" class="secondary-btn">
+            ⤓ Download month-by-month CSV
+          </button>
+        </div>
+      </section>
+
+      <section class="card">
+        <p class="goal-plan-basis">
+          These figures are illustrative and based on the assumed rate of return
+          and inflation shown above. Mutual fund investments are subject to market
+          risks; please read all scheme-related documents carefully. Past
+          performance does not guarantee future returns. Investments are held
+          directly in your own name with the respective fund houses.
+        </p>
+        <p class="field-hint">
+          Raviteja Soma · Wealth &amp; Investment Advisory · 9390250541 · ARN-348767
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    Wealth &amp; Investment Advisory · Mutual fund investments are subject to market risks.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script type="module" src="goal-share.js"></script>
+</body>
+</html>
