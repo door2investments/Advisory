@@ -25,10 +25,28 @@ import {
 const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+/**
+ * The goal maths, the tabs and the CSV are all local, so the page
+ * must stay usable even if the Supabase library fails to load
+ * (blocked CDN, offline, privacy extension). Only the client
+ * search and Save need the database, and they report it instead
+ * of letting a module-level throw kill every event listener.
+ */
+let supabaseClient = null;
+let databaseError = null;
+
+try {
+  if (!window.supabase || typeof window.supabase.createClient !== "function") {
+    throw new Error(
+      "The Supabase library did not load. Check your connection or any " +
+      "content blocker, then reload."
+    );
+  }
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (err) {
+  databaseError = err.message;
+  console.error("Supabase unavailable:", err);
+}
 
 /** Columns shown in the Client Information card. */
 const CLIENT_INFO_FIELDS = [
@@ -43,6 +61,7 @@ const MONEY_FIELDS = new Set(["monthly_expenses", "monthly_savings"]);
 
 let ownerMode = "client";       // "client" | "prospect"
 let selectedClient = null;      // a form_responses row
+let selectedProspect = null;    // a prospects row, when reusing one
 let editingGoalId = null;       // set when editing an existing goal
 let currentPlan = null;         // last computed plan
 
@@ -55,6 +74,8 @@ const tabProspect = el("tabProspect");
 const clientPane = el("clientPane");
 const prospectPane = el("prospectPane");
 const clientSearch = el("clientSearch");
+const prospectSearch = el("prospectSearch");
+const prospectResults = el("prospectResults");
 const clientResults = el("clientResults");
 const clientSearchHint = el("clientSearchHint");
 const selectedOwner = el("selectedOwner");
@@ -62,6 +83,14 @@ const clientInfoCard = el("clientInfoCard");
 const existingGoalsHint = el("existingGoalsHint");
 const saveMessage = el("saveMessage");
 const shareBox = el("shareBox");
+
+if (databaseError) {
+  const banner = document.getElementById("dbBanner");
+  banner.hidden = false;
+  banner.textContent =
+    `${databaseError} You can still calculate and download a plan on this ` +
+    `page, but searching for a client and saving are unavailable.`;
+}
 
 const GOAL_INPUTS = [
   "goalName", "goalDescription", "amountToday", "years",
@@ -110,6 +139,8 @@ clientSearch.addEventListener("input", () => {
 });
 
 async function runClientSearch() {
+  if (!supabaseClient) return;
+
   const term = clientSearch.value.trim();
 
   if (term.length < 2) {
@@ -184,6 +215,8 @@ function renderClientResults(rows) {
 
 /** Load the full client row and show it. */
 async function selectClient(mobileNumber) {
+  if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient
     .from("form_responses")
     .select("*")
@@ -227,6 +260,8 @@ function renderClientInfo(client) {
 
 /** Tell the advisor this client already has goals recorded. */
 async function loadExistingGoalCount(mobileNumber) {
+  if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient
     .from("client_goals")
     .select("id, goal_name")
@@ -242,6 +277,131 @@ async function loadExistingGoalCount(mobileNumber) {
     `This client already has ${data.length} goal(s) recorded: ` +
     data.map(g => `<strong>${escapeHtml(g.goal_name)}</strong>`).join(", ") +
     `. Saving here adds another.`;
+}
+
+/* ---------------- prospects ---------------- */
+
+/** Digits only, so "+91 90000 11111" and "9000011111" match. */
+const mobileDigits = value => String(value ?? "").replace(/\D/g, "");
+
+let prospectTimer = null;
+
+prospectSearch.addEventListener("input", () => {
+  clearTimeout(prospectTimer);
+  prospectTimer = setTimeout(runProspectSearch, 250);
+});
+
+async function runProspectSearch() {
+  if (!supabaseClient) return;
+
+  const term = prospectSearch.value.trim();
+  if (term.length < 2) {
+    prospectResults.innerHTML = "";
+    return;
+  }
+
+  const escaped = term.replace(/[%,]/g, "");
+  const { data, error } = await supabaseClient
+    .from("prospects")
+    .select("*")
+    .or(`full_name.ilike.%${escaped}%,mobile.ilike.%${escaped}%`)
+    .limit(10);
+
+  if (error) {
+    console.error(error);
+    prospectResults.innerHTML =
+      `<p class="goal-message error">Search failed: ${escapeHtml(error.message)}</p>`;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    prospectResults.innerHTML =
+      `<p class="field-hint">No existing prospect matched — enter a new one below.</p>`;
+    return;
+  }
+
+  prospectResults.innerHTML = "";
+  for (const row of data) {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "client-result";
+    item.innerHTML =
+      `<span class="cr-name">${escapeHtml(row.full_name)}</span>
+       <span class="cr-meta">${escapeHtml(row.mobile || "no mobile on file")}</span>`;
+    item.addEventListener("click", () => selectProspect(row));
+    prospectResults.appendChild(item);
+  }
+}
+
+function selectProspect(row) {
+  selectedProspect = row;
+  el("prospectName").value = row.full_name;
+  el("prospectMobile").value = row.mobile || "";
+  prospectSearch.value = "";
+  prospectResults.innerHTML = "";
+  showSaveMessage(`Adding a goal for ${row.full_name}.`, "info");
+}
+
+// Typing over the name or mobile means a different person, so the
+// previously picked prospect no longer applies.
+["prospectName", "prospectMobile"].forEach(id => {
+  el(id).addEventListener("input", () => {
+    if (!selectedProspect) return;
+    const sameName =
+      el("prospectName").value.trim().toLowerCase() ===
+      selectedProspect.full_name.trim().toLowerCase();
+    const sameMobile =
+      mobileDigits(el("prospectMobile").value) === mobileDigits(selectedProspect.mobile);
+    if (!sameName || !sameMobile) selectedProspect = null;
+  });
+});
+
+/**
+ * Return the prospects row for the typed name/mobile, creating it
+ * if this is someone new. The table has a unique index on
+ * (lower(name), digits of mobile), so a race or a duplicate just
+ * re-reads the existing row rather than erroring.
+ */
+async function ensureProspect(name, mobile) {
+  if (selectedProspect) return selectedProspect;
+
+  const digits = mobileDigits(mobile);
+  const escaped = name.replace(/[%,]/g, "");
+
+  const { data: existing } = await supabaseClient
+    .from("prospects")
+    .select("*")
+    .ilike("full_name", escaped)
+    .limit(25);
+
+  const match = (existing || []).find(
+    p => p.full_name.trim().toLowerCase() === name.trim().toLowerCase()
+      && mobileDigits(p.mobile) === digits
+  );
+  if (match) return match;
+
+  const { data, error } = await supabaseClient
+    .from("prospects")
+    .insert({ full_name: name, mobile: mobile || null })
+    .select()
+    .single();
+
+  if (!error) return data;
+
+  // Unique-index collision: someone else created them first.
+  const { data: retry } = await supabaseClient
+    .from("prospects")
+    .select("*")
+    .ilike("full_name", escaped)
+    .limit(25);
+
+  const found = (retry || []).find(
+    p => p.full_name.trim().toLowerCase() === name.trim().toLowerCase()
+      && mobileDigits(p.mobile) === digits
+  );
+  if (found) return found;
+
+  throw new Error(error.message);
 }
 
 /* ---------------- the plan ---------------- */
@@ -305,7 +465,7 @@ function refreshPlan() {
   el("outMonthlySip").textContent = fmt(plan.monthlySip);
   el("outLumpsum").textContent = fmt(plan.lumpsumToday);
   el("outStepUpSip").textContent = fmt(plan.stepUpSip);
-  el("outStepUpLabel").textContent = `${plan.stepUpPct}% a year`;
+  el("outStepUpLabel").textContent = `${plan.stepUpPct}%`;
 
   renderSplits(plan);
 }
@@ -394,6 +554,11 @@ function validate(goal) {
 el("saveGoalBtn").addEventListener("click", saveGoal);
 
 async function saveGoal() {
+  if (!supabaseClient) {
+    showSaveMessage(databaseError, "error");
+    return;
+  }
+
   const goal = readGoalForm();
   const problem = validate(goal);
   if (problem) {
@@ -406,14 +571,28 @@ async function saveGoal() {
   button.textContent = "Saving…";
 
   const payload = { ...goal };
+
   if (ownerMode === "client") {
     payload.client_mobile_number = selectedClient.mobile_number;
-    payload.prospect_name = null;
-    payload.prospect_mobile = null;
+    payload.prospect_id = null;
   } else {
-    payload.client_mobile_number = null;
-    payload.prospect_name = el("prospectName").value.trim();
-    payload.prospect_mobile = el("prospectMobile").value.trim() || null;
+    // A prospect is a real row now, so several goals for the same
+    // person share one record and one summary link.
+    try {
+      const prospect = await ensureProspect(
+        el("prospectName").value.trim(),
+        el("prospectMobile").value.trim()
+      );
+      selectedProspect = prospect;
+      payload.client_mobile_number = null;
+      payload.prospect_id = prospect.id;
+    } catch (err) {
+      console.error(err);
+      button.disabled = false;
+      button.textContent = "Save goal";
+      showSaveMessage("Could not save the prospect: " + err.message, "error");
+      return;
+    }
   }
 
   const { data, error } = editingGoalId
@@ -454,20 +633,43 @@ function renderShare(goal) {
   el("shareLink").value = shareUrl;
   el("openShareBtn").href = shareUrl;
 
-  const note = el("clientPageNote");
+  // The person-level link: every goal for this client or prospect
+  // on one page.
+  let summaryUrl = "";
   if (goal.client_mobile_number && selectedClient && selectedClient.access_token) {
-    note.hidden = false;
+    summaryUrl = `${base}summary.html?token=${encodeURIComponent(selectedClient.access_token)}`;
+  } else if (selectedProspect && selectedProspect.share_token) {
+    summaryUrl = `${base}summary.html?prospect=${encodeURIComponent(selectedProspect.share_token)}`;
+  }
+
+  el("summaryLink").value = summaryUrl;
+  el("openSummaryBtn").href = summaryUrl;
+
+  const note = el("clientPageNote");
+  note.hidden = false;
+  if (goal.client_mobile_number && selectedClient && selectedClient.access_token) {
     note.innerHTML =
-      `This goal now also appears on the client's own summary page: ` +
+      `This goal also appears on the client's own summary page: ` +
       `<a href="client.html?token=${encodeURIComponent(selectedClient.access_token)}"
           target="_blank" rel="noopener">open client summary</a>.`;
   } else {
-    note.hidden = false;
     note.textContent =
-      "This is a prospect goal, so it appears on the share link only. " +
-      "Once they complete onboarding you can re-save it against their client record.";
+      "Send the full plan link — every goal you save for this prospect appears " +
+      "on it, so you only ever share one link with them.";
   }
 }
+
+el("copySummaryBtn").addEventListener("click", async () => {
+  const link = el("summaryLink").value;
+  if (!link) return;
+  try {
+    await navigator.clipboard.writeText(link);
+    showSaveMessage("Full plan link copied.", "success");
+  } catch {
+    el("summaryLink").select();
+    showSaveMessage("Press Ctrl+C to copy the selected link.", "info");
+  }
+});
 
 el("copyShareBtn").addEventListener("click", async () => {
   const link = el("shareLink").value;
@@ -481,6 +683,8 @@ el("copyShareBtn").addEventListener("click", async () => {
 });
 
 el("newGoalBtn").addEventListener("click", () => {
+  // selectedProspect and the client stay put: adding a second goal
+  // for the same person is the common case.
   editingGoalId = null;
   el("goalName").value = "";
   el("goalDescription").value = "";
@@ -500,6 +704,8 @@ el("newGoalBtn").addEventListener("click", () => {
 
 /** Load an existing goal for editing. */
 async function loadGoal(goalId) {
+  if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient
     .from("client_goals")
     .select("*")
@@ -526,10 +732,14 @@ async function loadGoal(goalId) {
   if (data.client_mobile_number) {
     setOwnerMode("client");
     await selectClient(data.client_mobile_number);
-  } else {
+  } else if (data.prospect_id) {
     setOwnerMode("prospect");
-    el("prospectName").value = data.prospect_name ?? "";
-    el("prospectMobile").value = data.prospect_mobile ?? "";
+    const { data: prospect } = await supabaseClient
+      .from("prospects")
+      .select("*")
+      .eq("id", data.prospect_id)
+      .single();
+    if (prospect) selectProspect(prospect);
   }
 
   refreshPlan();
@@ -538,6 +748,8 @@ async function loadGoal(goalId) {
 
 /** Pre-select a client from ?token=. */
 async function selectClientByToken(token) {
+  if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient
     .from("form_responses")
     .select("*")
@@ -572,8 +784,13 @@ function escapeHtml(value) {
   const goalId = params.get("goal");
   const token = params.get("token");
 
-  if (goalId) await loadGoal(goalId);
-  else if (token) await selectClientByToken(token);
+  try {
+    if (goalId) await loadGoal(goalId);
+    else if (token) await selectClientByToken(token);
+  } catch (err) {
+    console.error(err);
+    showSaveMessage("Could not load initial data: " + err.message, "error");
+  }
 
   refreshPlan();
 })();

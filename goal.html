@@ -5,7 +5,7 @@
   <title>Goal Planner | Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20261004" />
 </head>
 
 <body>
@@ -15,6 +15,8 @@
   </header>
 
   <main class="container">
+
+    <div id="dbBanner" class="db-banner" hidden></div>
 
     <!-- ============ WHO IS THIS FOR ============ -->
     <section class="card">
@@ -41,9 +43,22 @@
 
       <!-- Prospect -->
       <div id="prospectPane" hidden>
+        <div class="field-row">
+          <label for="prospectSearch">Find an existing prospect</label>
+          <input type="search" id="prospectSearch" class="goal-input"
+                 placeholder="Search a prospect you have already planned for…"
+                 autocomplete="off" />
+        </div>
+        <div id="prospectResults" class="client-results"></div>
+
+        <p class="field-hint">
+          Or enter a new one. Reusing an existing prospect keeps all their goals
+          on one summary link.
+        </p>
+
         <div class="field-grid">
           <div class="field-row">
-            <label for="prospectName">Prospect name</label>
+            <label for="prospectName">Prospect name <span class="req">*</span></label>
             <input type="text" id="prospectName" class="goal-input"
                    placeholder="Full name" />
           </div>
@@ -53,10 +68,6 @@
                    placeholder="Optional" />
           </div>
         </div>
-        <p class="field-hint">
-          A prospect does not need to have filled the onboarding form. You can
-          send them this goal with the share link once it is saved.
-        </p>
       </div>
 
       <div id="selectedOwner" class="selected-owner" hidden></div>
@@ -237,6 +248,14 @@
           <button type="button" id="copyShareBtn" class="secondary-btn">Copy</button>
           <a id="openShareBtn" class="secondary-btn" target="_blank" rel="noopener">Open</a>
         </div>
+        <p class="share-divider"><strong>Full plan</strong> — every goal for this
+          person on one page.</p>
+        <div class="share-row">
+          <input type="text" id="summaryLink" class="goal-input" readonly />
+          <button type="button" id="copySummaryBtn" class="secondary-btn">Copy</button>
+          <a id="openSummaryBtn" class="secondary-btn" target="_blank" rel="noopener">Open</a>
+        </div>
+
         <p id="clientPageNote" class="field-hint" hidden></p>
       </div>
     </section>
@@ -248,6 +267,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script type="module" src="goal.js"></script>
+  <script type="module" src="goal.js?v=20261004"></script>
 </body>
 </html>

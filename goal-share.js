@@ -18,10 +18,18 @@ import {
 const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+let supabaseClient = null;
+let databaseError = null;
+
+try {
+  if (!window.supabase || typeof window.supabase.createClient !== "function") {
+    throw new Error("library did not load");
+  }
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (err) {
+  databaseError = err.message;
+  console.error("Supabase unavailable:", err);
+}
 
 const el = id => document.getElementById(id);
 
@@ -44,6 +52,14 @@ function escapeHtml(value) {
 }
 
 async function load() {
+  if (!supabaseClient) {
+    showError(
+      "This page could not reach the plan service. Check your connection " +
+      "or any content blocker, then reload."
+    );
+    return;
+  }
+
   const token = new URLSearchParams(location.search).get("share");
 
   if (!token) {
@@ -72,8 +88,13 @@ async function load() {
       .eq("mobile_number", goal.client_mobile_number)
       .single();
     ownerName = (client && client.full_name) || "";
-  } else {
-    ownerName = goal.prospect_name || "";
+  } else if (goal.prospect_id) {
+    const { data: prospect } = await supabaseClient
+      .from("prospects")
+      .select("full_name")
+      .eq("id", goal.prospect_id)
+      .single();
+    ownerName = (prospect && prospect.full_name) || "";
   }
 
   render(goal);
@@ -154,4 +175,7 @@ el("shareCsvBtn").addEventListener("click", () => {
   downloadCsv(`${name}.csv`, buildGoalCsv(currentPlan, SPLIT_PERCENTAGES));
 });
 
-load();
+load().catch(err => {
+  console.error(err);
+  showError("Something went wrong loading this goal plan. Please reload, or ask your advisor to resend the link.");
+});
