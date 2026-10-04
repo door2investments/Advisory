@@ -1032,3 +1032,14 @@ a.secondary-btn {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+.db-banner {
+  margin-bottom: 20px;
+  padding: 12px 15px;
+  border-radius: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  font-size: 13.5px;
+  line-height: 1.55;
+}

@@ -25,10 +25,28 @@ import {
 const SUPABASE_URL = "https://lyubfmzrzxntehlghfms.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_yAgi_Ae5nNTtanEmoWvETQ_b1khJyU8";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+/**
+ * The goal maths, the tabs and the CSV are all local, so the page
+ * must stay usable even if the Supabase library fails to load
+ * (blocked CDN, offline, privacy extension). Only the client
+ * search and Save need the database, and they report it instead
+ * of letting a module-level throw kill every event listener.
+ */
+let supabaseClient = null;
+let databaseError = null;
+
+try {
+  if (!window.supabase || typeof window.supabase.createClient !== "function") {
+    throw new Error(
+      "The Supabase library did not load. Check your connection or any " +
+      "content blocker, then reload."
+    );
+  }
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (err) {
+  databaseError = err.message;
+  console.error("Supabase unavailable:", err);
+}
 
 /** Columns shown in the Client Information card. */
 const CLIENT_INFO_FIELDS = [
@@ -62,6 +80,14 @@ const clientInfoCard = el("clientInfoCard");
 const existingGoalsHint = el("existingGoalsHint");
 const saveMessage = el("saveMessage");
 const shareBox = el("shareBox");
+
+if (databaseError) {
+  const banner = document.getElementById("dbBanner");
+  banner.hidden = false;
+  banner.textContent =
+    `${databaseError} You can still calculate and download a plan on this ` +
+    `page, but searching for a client and saving are unavailable.`;
+}
 
 const GOAL_INPUTS = [
   "goalName", "goalDescription", "amountToday", "years",
@@ -110,6 +136,8 @@ clientSearch.addEventListener("input", () => {
 });
 
 async function runClientSearch() {
+  if (!supabaseClient) return;
+
   const term = clientSearch.value.trim();
 
   if (term.length < 2) {
@@ -184,6 +212,8 @@ function renderClientResults(rows) {
 
 /** Load the full client row and show it. */
 async function selectClient(mobileNumber) {
+  if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient
     .from("form_responses")
     .select("*")
@@ -227,6 +257,8 @@ function renderClientInfo(client) {
 
 /** Tell the advisor this client already has goals recorded. */
 async function loadExistingGoalCount(mobileNumber) {
+  if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient
     .from("client_goals")
     .select("id, goal_name")
@@ -305,7 +337,7 @@ function refreshPlan() {
   el("outMonthlySip").textContent = fmt(plan.monthlySip);
   el("outLumpsum").textContent = fmt(plan.lumpsumToday);
   el("outStepUpSip").textContent = fmt(plan.stepUpSip);
-  el("outStepUpLabel").textContent = `${plan.stepUpPct}% a year`;
+  el("outStepUpLabel").textContent = `${plan.stepUpPct}%`;
 
   renderSplits(plan);
 }
@@ -394,6 +426,11 @@ function validate(goal) {
 el("saveGoalBtn").addEventListener("click", saveGoal);
 
 async function saveGoal() {
+  if (!supabaseClient) {
+    showSaveMessage(databaseError, "error");
+    return;
+  }
+
   const goal = readGoalForm();
   const problem = validate(goal);
   if (problem) {
@@ -500,6 +537,8 @@ el("newGoalBtn").addEventListener("click", () => {
 
 /** Load an existing goal for editing. */
 async function loadGoal(goalId) {
+  if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient
     .from("client_goals")
     .select("*")
@@ -538,6 +577,8 @@ async function loadGoal(goalId) {
 
 /** Pre-select a client from ?token=. */
 async function selectClientByToken(token) {
+  if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient
     .from("form_responses")
     .select("*")
@@ -572,8 +613,13 @@ function escapeHtml(value) {
   const goalId = params.get("goal");
   const token = params.get("token");
 
-  if (goalId) await loadGoal(goalId);
-  else if (token) await selectClientByToken(token);
+  try {
+    if (goalId) await loadGoal(goalId);
+    else if (token) await selectClientByToken(token);
+  } catch (err) {
+    console.error(err);
+    showSaveMessage("Could not load initial data: " + err.message, "error");
+  }
 
   refreshPlan();
 })();
